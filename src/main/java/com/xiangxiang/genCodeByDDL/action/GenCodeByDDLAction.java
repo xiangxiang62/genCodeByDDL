@@ -252,7 +252,7 @@ public class GenCodeByDDLAction extends AnAction {
     /**
      * 自定义对话框类，用于选择生成的代码类型
      */
-    class CodeGenerationDialog extends DialogWrapper {
+    static class CodeGenerationDialog extends DialogWrapper {
 
         private JCheckBox controllerCheckBox;
         private JCheckBox READMECheckBox;
@@ -295,7 +295,7 @@ public class GenCodeByDDLAction extends AnAction {
             READMEPanel.add(READMECheckBox);
 
             // 创建 "我直接一把梭哈" 按钮
-            JButton selectAllButton = new JButton("我直接一把梭哈");
+            JButton selectAllButton = new JButton("我全都要！！！");
             selectAllButton.addActionListener(e -> {
                 controllerCheckBox.setSelected(true);
                 modelCheckBox.setSelected(true);
