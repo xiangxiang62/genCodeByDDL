@@ -11,11 +11,5 @@ u
 Esrc/main/java/com/xiangxiang/genCodeByDDL/builder/sql/SQLDialect.java,8\8\88bb7d7fcc2145eee9b2f2cd080781659428787b
 9
 	README.md,8\e\8ec9a00bfd09b3190ac6b22251dbb1aa95a0579d
-y
-Isrc/main/java/com/xiangxiang/genCodeByDDL/builder/TableSchemaBuilder.java,1\3\13938ebd925b1173327dc1d4901074aded877c47
-w
-Gsrc/main/java/com/xiangxiang/genCodeByDDL/generate/GeneratorFacade.java,e\3\e3fe057f558f335a26acfa3a505131da89191e0e
 |
 Lsrc/main/java/com/xiangxiang/genCodeByDDL/builder/JavaEntityCodeBuilder.java,3\3\332503abc60e3c051088b7e5ef756453070b36f9
-t
-Dsrc/main/java/com/xiangxiang/genCodeByDDL/model/GenerateBySQLVO.java,8\6\8653d11c23e6f8f923ea9a54d5b734bb36d3671a

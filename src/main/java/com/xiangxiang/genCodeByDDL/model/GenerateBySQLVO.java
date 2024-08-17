@@ -37,6 +37,11 @@ public class GenerateBySQLVO {
     private List<String> javaAddEntityCode;
 
     /**
+     * Java 编辑实体代码
+     */
+    private List<String> javaEditEntityCode;
+
+    /**
      * Java 对象代码
      */
     private List<String> javaObjectCode;
@@ -57,7 +62,7 @@ public class GenerateBySQLVO {
 
     // 全参构造方法
     public GenerateBySQLVO(String insertSql, List<Map<String, Object>> dataList, String dataJson,
-                           List<String> javaEntityCode,List<String> javaAddEntityCode, List<String> javaObjectCode,
+                           List<String> javaEntityCode,List<String> javaAddEntityCode,List<String> javaEditEntityCode, List<String> javaObjectCode,
                            List<String> javaControllerCode, String plantUmlCode) {
         this.insertSql = insertSql;
         this.dataList = dataList;
@@ -67,6 +72,15 @@ public class GenerateBySQLVO {
         this.javaControllerCode = javaControllerCode;
         this.plantUmlCode = plantUmlCode;
         this.javaAddEntityCode = javaAddEntityCode;
+        this.javaEditEntityCode = javaEditEntityCode;
+    }
+
+    public List<String> getJavaEditEntityCode() {
+        return javaEditEntityCode;
+    }
+
+    public void setJavaEditEntityCode(List<String> javaEditEntityCode) {
+        this.javaEditEntityCode = javaEditEntityCode;
     }
 
     public List<String> getJavaAddEntityCode() {
