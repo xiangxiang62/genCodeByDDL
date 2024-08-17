@@ -1,0 +1,50 @@
+<idea-plugin>
+  <!-- 插件的唯一标识符 -->
+  <id>com.xiangxiang.genCodeByDDL</id>
+  <!-- 插件的显示名称 -->
+  <name>genCodeByDDL</name>
+  <!-- 插件的版本 -->
+  <version>1.0</version>
+  <!-- 插件的供应商信息 -->
+  <vendor email="1964362087@qq.com" url="#">个人开发者</vendor>
+
+  <!-- 插件的描述信息，可以使用 HTML 标签 -->
+  <description><![CDATA[
+      这是一个可以根据 DDL 自动生成 Java Model、Controller / Service(ServiceImpl) / Mapper / plantUML...代码的插件，可以极大程度简化开发难度，提升开发效率。
+    ]]></description>
+
+  <!-- 插件的变更日志，可以使用 HTML 标签 -->
+  <change-notes><![CDATA[
+      This is Version 1.0
+    ]]>
+  </change-notes>
+
+  <!-- 插件的兼容 IDEA 版本范围 -->
+  <!-- see https://plugins.jetbrains.com/docs/intellij/build-number-ranges.html for description -->
+  <idea-version since-build="173.0"/>
+
+  <!-- 插件依赖的模块或库 -->
+  <!-- see https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html
+       on how to target different products -->
+  <depends>com.intellij.modules.platform</depends>
+
+  <!-- 插件的扩展点 -->
+  <!-- 用于注册插件提供的扩展点 -->
+  <extensions defaultExtensionNs="com.intellij">
+    <!-- Add your extensions here -->
+  </extensions>
+
+  <!-- 插件的动作定义 -->
+  <!-- 用于注册插件提供的用户界面动作，如菜单项、工具栏按钮等 -->
+  <actions>
+    <!-- Add your actions here -->
+    <action id="GenCodeByDDL" class="main.java.com.xiangxiang.genCodeByDDL.action.GenCodeByDDLAction" text="GenCodeByDDL"
+            description="这是一个可以根据 DDL 自动生成 Java Model、Controller / Service(ServiceImpl) / Mapper / plantUML...代码的插件，可以极大程度简化开发难度，提升开发效率。">
+      <!-- 绑定到特定的上下文菜单 -->
+      <add-to-group group-id="EditorPopupMenu" anchor="first"/>
+      <!-- 指定动作的快捷方式 -->
+      <keyboard-shortcut keymap="$default" first-keystroke="ctrl shift Z"/>
+    </action>
+  </actions>
+
+</idea-plugin>
