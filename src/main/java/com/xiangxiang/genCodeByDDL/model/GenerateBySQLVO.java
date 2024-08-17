@@ -6,7 +6,7 @@ import java.util.Map;
 /**
  * 生成 VO 创建多表
  *
- * @author cong
+ * @author GenCodeByDDLPlugins
  * @date 2024/08/09
  */
 public class GenerateBySQLVO {

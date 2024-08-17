@@ -17,7 +17,7 @@ import java.util.Optional;
 /**
  * 类型：脚本生成器
  *
- * @author cong
+ * @author GenCodeByDDLPlugins
  * @date 2024/08/01
  */
 @Slf4j
@@ -29,17 +29,24 @@ public class JavaControllerBuilder {
         try {
             // 初始化 FreeMarker 配置
             configuration = new Configuration(Configuration.VERSION_2_3_31);
-            // 设置模板加载路径
+
+            // 设置模板加载路径，相对于类路径
             configuration.setClassLoaderForTemplateLoading(
-                    JavaControllerBuilder.class.getClassLoader(), "main/java/com/xiangxiang/genCodeByDDL/templates"
+                    JavaControllerBuilder.class.getClassLoader(), "templates"
             );
+
             // 设置默认编码
             configuration.setDefaultEncoding("UTF-8");
+
             // 设置模板异常处理
             configuration.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
-            // 打印模板加载路径
-            System.out.println("wenjian: " +
-                    JavaControllerBuilder.class.getClassLoader().getResource("main/java/com/xiangxiang/genCodeByDDL/templates/java_entity.ftl"));
+
+            // 打印模板文件路径，检查是否可以找到模板
+            if (JavaControllerBuilder.class.getClassLoader().getResource("templates/java_controller.ftl") != null) {
+                System.out.println("文件存在java_controller.java.ftl");
+            } else {
+                System.out.println("模板文件不存在");
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -61,7 +68,7 @@ public class JavaControllerBuilder {
         for (TableSchema tableSchema : tableSchemas) {
             String tableComment = tableSchema.getTableComment();
             String tableName = tableSchema.getTableName().toLowerCase();
-            String upperCamelTableName = StringUtils.toCamelCase(tableSchema.getTableName());
+            String upperCamelTableName = StringUtils.toPascalCase(tableSchema.getTableName());
 
             // 依次填充每一列
 //            List<FieldTypeScriptDTO> fieldDTOList = new ArrayList<>();
@@ -78,7 +85,7 @@ public class JavaControllerBuilder {
                     .setClassName(upperCamelTableName) // 类名为大写的表名
                     .setClassComment(Optional.ofNullable(tableComment).orElse(upperCamelTableName))
                     .setCaseTableName(upperCamelTableName)
-                    .setTableName(tableName);// 类注释为表注释或表名
+                    .setTableName(StringUtils.toCamelCase(tableName));// 类注释为表注释或表名
             // 生成代码
             StringWriter stringWriter = new StringWriter();
             Template temp = configuration.getTemplate("java_controller.ftl");

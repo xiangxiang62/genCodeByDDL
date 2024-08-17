@@ -2,10 +2,11 @@ package main.java.com.xiangxiang.genCodeByDDL.action;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFileManager;
 import main.java.com.xiangxiang.genCodeByDDL.builder.TableSchemaBuilder;
 import main.java.com.xiangxiang.genCodeByDDL.model.GenerateBySQLVO;
 import org.jetbrains.annotations.NotNull;
@@ -13,8 +14,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.io.OutputStream;
-import java.io.FileOutputStream;
 import java.util.List;
 
 /**
@@ -40,33 +39,45 @@ public class GenCodeByDDLAction extends AnAction {
 
                 // 根据 SQL 生成代码
                 GenerateBySQLVO generateBySQLVO = TableSchemaBuilder.buildFromDDL(fileContent);
-                List<String> javaEntityCodeList = generateBySQLVO.getJavaEntityCode();
                 List<String> javaControllerCode = generateBySQLVO.getJavaControllerCode();
                 List<String> javaAddEntityCode = generateBySQLVO.getJavaAddEntityCode();
+                List<String> javaEntityCodeList = generateBySQLVO.getJavaEntityCode();
 
-                VirtualFile projectRoot = getProjectRoot(project);
-                if (projectRoot == null) return;
+                // 执行写操作的代码
+                WriteCommandAction.runWriteCommandAction(project, () -> {
+                    try {
+                        VirtualFile projectRoot = getProjectRoot(project);
+                        if (projectRoot == null) return;
 
-                // 创建 `generator` 目录
-                VirtualFile generatorDir = getGeneratorDir(projectRoot, "generator");
-                // 创建 `model` 目录
-                createModelToEntity(javaEntityCodeList, generatorDir, "model");
-                // 创建 `controller` 目录
-                createModelToEntity(javaControllerCode, generatorDir, "controller");
-                createModelToEntity(javaAddEntityCode, generatorDir, "dto");
+                        // 创建 `generator` 目录
+                        VirtualFile generatorDir = getGeneratorDir(projectRoot, "generator");
+                        // 创建 `model` 目录
+                        createModelToEntity(javaEntityCodeList, generatorDir, "model");
+                        // 创建 `controller` 目录
+                        createModelToEntity(javaControllerCode, generatorDir, "controller");
+                        createModelToEntity(javaAddEntityCode, generatorDir, "dto");
 
-
-                Messages.showMessageDialog("代码已生成并保存。", "成功", Messages.getInformationIcon());
+                        // 在写操作完成后显示消息对话框
+                        ApplicationManager.getApplication().invokeLater(() -> {
+                            Messages.showMessageDialog("代码已生成并保存。", "成功", Messages.getInformationIcon());
+                        });
+                    } catch (IOException e) {
+                        ApplicationManager.getApplication().invokeLater(() -> {
+                            Messages.showMessageDialog("写入文件失败: " + e.getMessage(), "错误", Messages.getErrorIcon());
+                        });
+                    }
+                });
             } catch (IOException e) {
-                Messages.showMessageDialog("读取文件失败: " + e.getMessage(), "错误", Messages.getErrorIcon());
+                ApplicationManager.getApplication().invokeLater(() -> {
+                    Messages.showMessageDialog("读取文件失败: " + e.getMessage(), "错误", Messages.getErrorIcon());
+                });
             }
         } else {
-            Messages.showMessageDialog("此操作仅适用于 .sql 文件。", "错误", Messages.getErrorIcon());
+            ApplicationManager.getApplication().invokeLater(() -> {
+                Messages.showMessageDialog("此操作仅适用于 .sql 文件。", "错误", Messages.getErrorIcon());
+            });
         }
     }
-
-
-
 
     @Nullable
     private VirtualFile getProjectRoot(Project project) {
@@ -99,9 +110,7 @@ public class GenCodeByDDLAction extends AnAction {
             String className = extractClassName(javaEntityCode);
             if (className != null) {
                 VirtualFile newFile = modelDir.createChildData(this, className + ".java");
-                try (OutputStream outputStream = new FileOutputStream(newFile.getPath())) {
-                    outputStream.write(javaEntityCode.getBytes(StandardCharsets.UTF_8));
-                }
+                newFile.setBinaryContent(javaEntityCode.getBytes(StandardCharsets.UTF_8));
             }
         }
     }

@@ -1,5 +1,9 @@
 package main.java.com.xiangxiang.genCodeByDDL.builder;
 
+import com.intellij.openapi.application.PathManager;
+import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.extensions.PluginDescriptor;
+import com.intellij.openapi.project.Project;
 import main.java.com.xiangxiang.genCodeByDDL.model.dto.JavaEntityGenerateDTO;
 import main.java.com.xiangxiang.genCodeByDDL.model.TableSchema;
 import main.java.com.xiangxiang.genCodeByDDL.model.enums.SqlTypeToJavaTypeEnum;
@@ -9,10 +13,7 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.StringWriter;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,23 +21,30 @@ import java.util.Optional;
 
 public class JavaEntityCodeBuilder {
 
-    private static Configuration configuration;
+    public static Configuration configuration;
 
     static {
         try {
             // 初始化 FreeMarker 配置
             configuration = new Configuration(Configuration.VERSION_2_3_31);
-            // 设置模板加载路径
+
+            // 设置模板加载路径，相对于类路径
             configuration.setClassLoaderForTemplateLoading(
-                    JavaEntityCodeBuilder.class.getClassLoader(), "main/java/com/xiangxiang/genCodeByDDL/templates"
+                    JavaEntityCodeBuilder.class.getClassLoader(), "templates"
             );
+
             // 设置默认编码
             configuration.setDefaultEncoding("UTF-8");
+
             // 设置模板异常处理
             configuration.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
-            // 打印模板加载路径
-            System.out.println("wenjian: " +
-                    JavaEntityCodeBuilder.class.getClassLoader().getResource("main/java/com/xiangxiang/genCodeByDDL/templates/java_entity.ftl"));
+
+            // 打印模板文件路径，检查是否可以找到模板
+            if (JavaEntityCodeBuilder.class.getClassLoader().getResource("templates/java_entity.ftl") != null) {
+                System.out.println("模板文件存在java_entity");
+            } else {
+                System.out.println("模板文件不存在");
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

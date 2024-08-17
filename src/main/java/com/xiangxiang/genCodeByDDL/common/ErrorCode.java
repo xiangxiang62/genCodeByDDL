@@ -2,7 +2,7 @@ package main.java.com.xiangxiang.genCodeByDDL.common;
 
 /**
  * 自定义错误码
- * # @author <a href="https://github.com/lhccong">程序员聪</a>
+ * @author GenCodeByDDLPlugins
  */
 public enum ErrorCode {
 

@@ -18,7 +18,7 @@ public class ${className} implements Serializable {
      * ${field.comment}
      */
     </#if>
-    private ${field.javaType} ${field.fieldName};
+    private ${field.entityType} ${field.fieldName};
 
 </#list>
 }

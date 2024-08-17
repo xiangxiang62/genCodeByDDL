@@ -39,7 +39,9 @@
   <actions>
     <!-- Add your actions here -->
     <action id="GenCodeByDDL" class="main.java.com.xiangxiang.genCodeByDDL.action.GenCodeByDDLAction" text="GenCodeByDDL"
-            description="这是一个可以根据 DDL 自动生成 Java Model、Controller / Service(ServiceImpl) / Mapper / plantUML...代码的插件，可以极大程度简化开发难度，提升开发效率。">
+            description="这是一个可以根据 DDL 自动生成 Java Model、Controller / Service(ServiceImpl) / Mapper / plantUML...代码的插件，可以极大程度简化开发难度，提升开发效率。"
+            icon="/icons/genicon.png"
+    >
       <!-- 绑定到特定的上下文菜单 -->
       <add-to-group group-id="EditorPopupMenu" anchor="first"/>
       <!-- 指定动作的快捷方式 -->

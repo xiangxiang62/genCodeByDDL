@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * 表概要
  *
- * @author cong
+ * @author GenCodeByDDLPlugins
  * @date 2024/07/31
  */
 @Data

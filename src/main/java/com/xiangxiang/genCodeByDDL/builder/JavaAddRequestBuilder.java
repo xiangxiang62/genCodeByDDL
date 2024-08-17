@@ -27,17 +27,24 @@ public class JavaAddRequestBuilder {
         try {
             // 初始化 FreeMarker 配置
             configuration = new Configuration(Configuration.VERSION_2_3_31);
-            // 设置模板加载路径
+
+            // 设置模板加载路径，相对于类路径
             configuration.setClassLoaderForTemplateLoading(
-                    JavaAddRequestBuilder.class.getClassLoader(), "main/java/com/xiangxiang/genCodeByDDL/templates"
+                    JavaAddRequestBuilder.class.getClassLoader(), "templates"
             );
+
             // 设置默认编码
             configuration.setDefaultEncoding("UTF-8");
+
             // 设置模板异常处理
             configuration.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
-            // 打印模板加载路径
-            System.out.println("wenjian: " +
-                    JavaAddRequestBuilder.class.getClassLoader().getResource("main/java/com/xiangxiang/genCodeByDDL/templates/TemplateAddRequest.java.ftl"));
+
+            // 打印模板文件路径，检查是否可以找到模板
+            if (JavaAddRequestBuilder.class.getClassLoader().getResource("templates/TemplateAddRequest.java.ftl") != null) {
+                System.out.println("模板文件存在TemplateAddRequest.java.ftl");
+            } else {
+                System.out.println("模板文件不存在");
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

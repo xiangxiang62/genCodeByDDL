@@ -4,7 +4,7 @@ import main.java.com.xiangxiang.genCodeByDDL.common.ErrorCode;
 
 /**
  * 自定义异常类
- * # @author <a href="https://github.com/lhccong">程序员聪</a>
+ * @author GenCodeByDDLPlugins
  */
 public class BusinessException extends RuntimeException {
     public int getCode() {

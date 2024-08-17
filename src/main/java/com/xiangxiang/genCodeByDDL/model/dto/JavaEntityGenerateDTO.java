@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Java 实体生成封装类
  *
- * @author cong
+ * @author GenCodeByDDLPlugins
  * @date 2024/08/02
  */
 @Data

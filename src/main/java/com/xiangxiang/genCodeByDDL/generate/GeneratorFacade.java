@@ -29,9 +29,9 @@ public class GeneratorFacade {
 //        // 生成数据 json
 //        String dataJson = JsonBuilder.buildJson(dataList);
         // 生成 java 实体代码
-        List<String> javaEntityCode = JavaEntityCodeBuilder.buildJavaEntityCode(tableSchemas);
         // 生成 java 请求实体代码
         List<String> javaAddEntityCode = JavaAddRequestBuilder.buildJavaAddEntityCode(tableSchemas);
+        List<String> javaEntityCode = JavaEntityCodeBuilder.buildJavaEntityCode(tableSchemas);
         // 生成控制层代码
         List<String> javaControllerCode = JavaControllerBuilder.buildJavaControllerCode(tableSchemas);
 //        // 生成 java 对象代码
