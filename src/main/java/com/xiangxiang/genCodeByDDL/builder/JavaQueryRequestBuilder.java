@@ -38,7 +38,7 @@ public class JavaQueryRequestBuilder {
 
             // 打印模板文件路径，检查是否可以找到模板
             if (JavaQueryRequestBuilder.class.getClassLoader().getResource("templates/TemplateQueryRequest.java.ftl") != null) {
-                System.out.println("模板文件存在 TemplateEditRequest.java.ftl");
+                System.out.println("模板文件存在 TemplateQueryRequest.java.ftl");
             } else {
                 System.out.println("模板文件不存在");
             }

@@ -12,9 +12,9 @@ import java.util.Map;
 public class GenerateBySQLVO {
 
     /**
-     * 插入 SQL
+     * README
      */
-    private String insertSql;
+    private String README;
 
     /**
      * 数据列表
@@ -72,12 +72,12 @@ public class GenerateBySQLVO {
     }
 
     // 全参构造方法
-    public GenerateBySQLVO(String insertSql, List<Map<String, Object>> dataList, String dataJson,
+    public GenerateBySQLVO(String README, List<Map<String, Object>> dataList, String dataJson,
                            List<String> javaEntityCode, List<String> javaAddEntityCode,
                            List<String> javaEditEntityCode, List<String> javaObjectCode,
                            List<String> javaQueryEntityCode, List<String> javaUpdateEntityCode,
                            List<String> javaControllerCode, String plantUmlCode) {
-        this.insertSql = insertSql;
+        this.README = README;
         this.dataList = dataList;
         this.dataJson = dataJson;
         this.javaEntityCode = javaEntityCode;
@@ -123,12 +123,12 @@ public class GenerateBySQLVO {
     }
 
     // Getter 和 Setter 方法
-    public String getInsertSql() {
-        return insertSql;
+    public String getREADME() {
+        return README;
     }
 
-    public void setInsertSql(String insertSql) {
-        this.insertSql = insertSql;
+    public void setREADME(String insertSql) {
+        this.README = insertSql;
     }
 
     public List<Map<String, Object>> getDataList() {

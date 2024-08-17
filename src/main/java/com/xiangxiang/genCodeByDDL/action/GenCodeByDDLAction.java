@@ -17,6 +17,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,6 +57,8 @@ public class GenCodeByDDLAction extends AnAction {
                 List<String> javaUpdateEntityCode = generateBySQLVO.getJavaUpdateEntityCode();
                 // 获取实体类代码
                 List<String> javaEntityCodeList = generateBySQLVO.getJavaEntityCode();
+                // 获取 README.md 文件
+                String README = generateBySQLVO.getREADME();
 
                 // 弹出对话框让用户选择生成的代码类型
                 CodeGenerationDialog dialog = new CodeGenerationDialog(project);
@@ -70,7 +73,7 @@ public class GenCodeByDDLAction extends AnAction {
                             VirtualFile projectRoot = getProjectRoot(project);
                             if (projectRoot == null) return;
 
-                            // 创建 `generator` 目录
+                            // 创建 generator 目录
                             VirtualFile generatorDir = getGeneratorDir(projectRoot, "generator");
 
                             // 根据用户选择生成相应的代码
@@ -91,6 +94,9 @@ public class GenCodeByDDLAction extends AnAction {
                             }
                             if (selectedOptions.getOrDefault("dto", false)) {
                                 createDTOFiles(javaUpdateEntityCode, generatorDir);
+                            }
+                            if (selectedOptions.getOrDefault("readme", false)) {
+                                createREADMEFile(Collections.singletonList(README), projectRoot);
                             }
 
                             // 在写操作完成后显示消息对话框
@@ -133,11 +139,11 @@ public class GenCodeByDDLAction extends AnAction {
     }
 
     /**
-     * 获取或创建 `generator` 目录
+     * 获取或创建 generator 目录
      *
      * @param projectRoot 项目的根目录
      * @param generator   目录名
-     * @return `generator` 目录
+     * @return generator 目录
      * @throws IOException 如果创建目录失败
      */
     @NotNull
@@ -161,7 +167,11 @@ public class GenCodeByDDLAction extends AnAction {
         // 获取或创建子包目录
         VirtualFile subPackageDir = getGeneratorDir(generatorDir, subPackage);
 
-        VirtualFile entityDir = getGeneratorDir(subPackageDir, "entity");
+        VirtualFile entityDir = subPackageDir;
+
+        if (subPackage.equals("model")) {
+            entityDir = getGeneratorDir(subPackageDir, "entity");
+        }
 
         // 将每个 Java 代码写入对应的文件
         for (String javaCode : javaCodeList) {
@@ -202,6 +212,25 @@ public class GenCodeByDDLAction extends AnAction {
     }
 
     /**
+     * 创建 DTO 代码文件，并将其放置在 model.dto 子包中，按表名分类
+     *
+     * @param javaCodeList 需要创建的 DTO 代码列表
+     * @param generatorDir 目标目录
+     * @throws IOException 如果写入文件失败
+     */
+    private void createREADMEFile(List<String> javaCodeList, VirtualFile generatorDir) throws IOException {
+        VirtualFile READMEDir = getGeneratorDir(generatorDir, "generator");
+
+        // 将每个 DTO 代码写入对应的文件夹
+        for (String javaCode : javaCodeList) {
+            String className = "README";
+            // 创建文件
+            VirtualFile newFile = READMEDir.createChildData(this, className + ".md");
+            newFile.setBinaryContent(javaCode.getBytes(StandardCharsets.UTF_8));
+        }
+    }
+
+    /**
      * 从 Java 代码中提取类名
      *
      * @param javaCode Java 代码
@@ -223,90 +252,79 @@ public class GenCodeByDDLAction extends AnAction {
     /**
      * 自定义对话框类，用于选择生成的代码类型
      */
-    private static class CodeGenerationDialog extends DialogWrapper {
+    class CodeGenerationDialog extends DialogWrapper {
 
         private JCheckBox controllerCheckBox;
+        private JCheckBox READMECheckBox;
         private JCheckBox modelCheckBox;
         private JCheckBox dtoCheckBox;
         private final Map<String, Boolean> selectedOptions = new HashMap<>();
 
-        /**
-         * 构造函数，初始化对话框
-         *
-         * @param project 当前项目
-         */
         protected CodeGenerationDialog(@Nullable Project project) {
             super(project);
-            setTitle("选择要生成的代码类型"); // 设置对话框标题
-            init(); // 初始化对话框
+            setTitle("选择要生成的代码类型");
+            init();
         }
 
-        /**
-         * 创建对话框的中心面板，该面板包含选项卡供用户选择要生成的代码类型。
-         * <p>
-         * 该方法创建了一个包含两个选项卡的面板：
-         * <ul>
-         *     <li>逻辑相关：包含一个复选框，用于选择是否生成 Controller 代码</li>
-         *     <li>实体类相关：包含两个复选框，分别用于选择是否生成 Model 代码和 DTO 代码</li>
-         * </ul>
-         * </p>
-         *
-         * @return 创建的中心面板，包含选项卡和相关控件
-         */
         @Override
         protected JComponent createCenterPanel() {
-            // 创建选项卡面板，用于展示多个选项卡
+            // 创建选项卡面板
             JTabbedPane tabbedPane = new JTabbedPane();
 
             // 创建 Controller 选项卡面板
             JPanel controllerPanel = new JPanel();
-            controllerPanel.setLayout(new BoxLayout(controllerPanel, BoxLayout.Y_AXIS)); // 设置布局管理器为垂直排列
-            controllerPanel.setPreferredSize(new Dimension(600, 450)); // 设置选项卡的首选大小
-            controllerCheckBox = new JCheckBox("Controller"); // 创建一个复选框，用于选择是否生成 Controller 代码
-            controllerPanel.add(controllerCheckBox); // 将复选框添加到 Controller 选项卡面板中
+            controllerPanel.setLayout(new BoxLayout(controllerPanel, BoxLayout.Y_AXIS));
+            controllerPanel.setPreferredSize(new Dimension(600, 450));
+            controllerCheckBox = new JCheckBox("Controller");
+            controllerPanel.add(controllerCheckBox);
 
             // 创建 Model 选项卡面板，包括 DTO 选项
             JPanel modelPanel = new JPanel();
-            modelPanel.setLayout(new BoxLayout(modelPanel, BoxLayout.Y_AXIS)); // 设置布局管理器为垂直排列
-            modelPanel.setPreferredSize(new Dimension(600, 450)); // 设置选项卡的首选大小
-            modelCheckBox = new JCheckBox("Model"); // 创建一个复选框，用于选择是否生成 Model 代码
-            dtoCheckBox = new JCheckBox("DTO"); // 创建一个复选框，用于选择是否生成 DTO 代码
-            modelPanel.add(modelCheckBox); // 将 Model 复选框添加到 Model 选项卡面板中
-            modelPanel.add(dtoCheckBox); // 将 DTO 复选框添加到 Model 选项卡面板中
+            modelPanel.setLayout(new BoxLayout(modelPanel, BoxLayout.Y_AXIS));
+            modelPanel.setPreferredSize(new Dimension(600, 450));
+            modelCheckBox = new JCheckBox("Model");
+            dtoCheckBox = new JCheckBox("DTO");
+            modelPanel.add(modelCheckBox);
+            modelPanel.add(dtoCheckBox);
+
+            // 创建 README 选项卡面板
+            JPanel READMEPanel = new JPanel();
+            READMEPanel.setLayout(new BoxLayout(READMEPanel, BoxLayout.Y_AXIS));
+            READMEPanel.setPreferredSize(new Dimension(600, 450));
+            READMECheckBox = new JCheckBox("README");
+            READMEPanel.add(READMECheckBox);
+
+            // 创建 "我直接一把梭哈" 按钮
+            JButton selectAllButton = new JButton("我直接一把梭哈");
+            selectAllButton.addActionListener(e -> {
+                controllerCheckBox.setSelected(true);
+                modelCheckBox.setSelected(true);
+                dtoCheckBox.setSelected(true);
+                READMECheckBox.setSelected(true);
+            });
+
+            // 创建一个面板来包含选项卡和按钮
+            JPanel mainPanel = new JPanel(new BorderLayout());
+            mainPanel.add(tabbedPane, BorderLayout.CENTER);
+            mainPanel.add(selectAllButton, BorderLayout.SOUTH);
 
             // 将面板添加到选项卡中
             tabbedPane.addTab("逻辑相关", controllerPanel);
             tabbedPane.addTab("实体类相关", modelPanel);
+            tabbedPane.addTab("插件自述", READMEPanel);
 
-            return tabbedPane;
+            return mainPanel;
         }
 
-        /**
-         * 确认对话框操作时调用的方法。此方法将获取用户在对话框中选择的代码生成选项，
-         * 并将选项存储到 `selectedOptions` 映射中，以便后续使用。
-         * <p>
-         * 调用此方法时会记录用户的选择状态，选择的选项包括：
-         * <ul>
-         *     <li>"controller"：是否选择生成 Controller 代码</li>
-         *     <li>"model"：是否选择生成 Model 代码</li>
-         *     <li>"dto"：是否选择生成 DTO 代码</li>
-         * </ul>
-         * </p>
-         */
         @Override
         protected void doOKAction() {
-            // 获取用户选择的选项，并存储到 `selectedOptions` 中
             selectedOptions.put("controller", controllerCheckBox.isSelected());
             selectedOptions.put("model", modelCheckBox.isSelected());
             selectedOptions.put("dto", dtoCheckBox.isSelected());
-            super.doOKAction(); // 调用父类方法确认对话框操作
+            selectedOptions.put("readme", READMECheckBox.isSelected());
+            super.doOKAction();
         }
 
-        /**
-         * 获取用户选择的选项
-         *
-         * @return 用户选择的选项及其状态
-         */
         public Map<String, Boolean> getSelectedOptions() {
             return selectedOptions;
         }
