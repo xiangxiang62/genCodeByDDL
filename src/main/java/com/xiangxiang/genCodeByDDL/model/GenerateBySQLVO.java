@@ -42,6 +42,17 @@ public class GenerateBySQLVO {
     private List<String> javaEditEntityCode;
 
     /**
+     * Java 查询实体代码
+     */
+    private List<String> javaQueryEntityCode;
+
+    /**
+     * Java 更新实体代码
+     */
+    private List<String> javaUpdateEntityCode;
+
+
+    /**
      * Java 对象代码
      */
     private List<String> javaObjectCode;
@@ -62,7 +73,9 @@ public class GenerateBySQLVO {
 
     // 全参构造方法
     public GenerateBySQLVO(String insertSql, List<Map<String, Object>> dataList, String dataJson,
-                           List<String> javaEntityCode,List<String> javaAddEntityCode,List<String> javaEditEntityCode, List<String> javaObjectCode,
+                           List<String> javaEntityCode, List<String> javaAddEntityCode,
+                           List<String> javaEditEntityCode, List<String> javaObjectCode,
+                           List<String> javaQueryEntityCode, List<String> javaUpdateEntityCode,
                            List<String> javaControllerCode, String plantUmlCode) {
         this.insertSql = insertSql;
         this.dataList = dataList;
@@ -73,6 +86,24 @@ public class GenerateBySQLVO {
         this.plantUmlCode = plantUmlCode;
         this.javaAddEntityCode = javaAddEntityCode;
         this.javaEditEntityCode = javaEditEntityCode;
+        this.javaQueryEntityCode = javaQueryEntityCode;
+        this.javaUpdateEntityCode = javaUpdateEntityCode;
+    }
+
+    public List<String> getJavaQueryEntityCode() {
+        return javaQueryEntityCode;
+    }
+
+    public void setJavaQueryEntityCode(List<String> javaQueryEntityCode) {
+        this.javaQueryEntityCode = javaQueryEntityCode;
+    }
+
+    public List<String> getJavaUpdateEntityCode() {
+        return javaUpdateEntityCode;
+    }
+
+    public void setJavaUpdateEntityCode(List<String> javaUpdateEntityCode) {
+        this.javaUpdateEntityCode = javaUpdateEntityCode;
     }
 
     public List<String> getJavaEditEntityCode() {

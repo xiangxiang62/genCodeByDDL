@@ -44,9 +44,17 @@ public class GenCodeByDDLAction extends AnAction {
 
                 // 根据 SQL 文件内容生成 Java 代码
                 GenerateBySQLVO generateBySQLVO = TableSchemaBuilder.buildFromDDL(fileContent);
+                // 获取控制层代码
                 List<String> javaControllerCode = generateBySQLVO.getJavaControllerCode();
+                // 获取新增 DTO 代码
                 List<String> javaAddEntityCode = generateBySQLVO.getJavaAddEntityCode();
+                // 获取编辑 DTO 代码
                 List<String> javaEditEntityCode = generateBySQLVO.getJavaEditEntityCode();
+                // 获取查询 DTO 代码
+                List<String> javaQueryEntityCode = generateBySQLVO.getJavaQueryEntityCode();
+                // 获取更新 DTO 代码
+                List<String> javaUpdateEntityCode = generateBySQLVO.getJavaUpdateEntityCode();
+                // 获取实体类代码
                 List<String> javaEntityCodeList = generateBySQLVO.getJavaEntityCode();
 
                 // 弹出对话框让用户选择生成的代码类型
@@ -77,6 +85,12 @@ public class GenCodeByDDLAction extends AnAction {
                             }
                             if (selectedOptions.getOrDefault("dto", false)) {
                                 createDTOFiles(javaEditEntityCode, generatorDir);
+                            }
+                            if (selectedOptions.getOrDefault("dto", false)) {
+                                createDTOFiles(javaQueryEntityCode, generatorDir);
+                            }
+                            if (selectedOptions.getOrDefault("dto", false)) {
+                                createDTOFiles(javaUpdateEntityCode, generatorDir);
                             }
 
                             // 在写操作完成后显示消息对话框
@@ -177,7 +191,7 @@ public class GenCodeByDDLAction extends AnAction {
             String className = extractClassName(javaCode);
             if (className != null) {
                 // 假设类名格式为 tableNameAddRequest，提取表名部分
-                String tableName = className.replaceAll("(AddRequest|EditRequest)$", "").toLowerCase();// 提取表名并转换为小写
+                String tableName = className.replaceAll("(AddRequest|EditRequest|QueryRequest|UpdateRequest)$", "").toLowerCase();// 提取表名并转换为小写
                 // 创建表名子目录
                 VirtualFile tableDir = getGeneratorDir(dtoDir, tableName);
                 // 创建 DTO 文件

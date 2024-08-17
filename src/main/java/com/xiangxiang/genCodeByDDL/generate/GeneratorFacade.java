@@ -1,9 +1,6 @@
 package main.java.com.xiangxiang.genCodeByDDL.generate;
 
-import main.java.com.xiangxiang.genCodeByDDL.builder.JavaAddRequestBuilder;
-import main.java.com.xiangxiang.genCodeByDDL.builder.JavaEditRequestBuilder;
-import main.java.com.xiangxiang.genCodeByDDL.builder.JavaEntityCodeBuilder;
-import main.java.com.xiangxiang.genCodeByDDL.builder.JavaControllerBuilder;
+import main.java.com.xiangxiang.genCodeByDDL.builder.*;
 import main.java.com.xiangxiang.genCodeByDDL.common.ErrorCode;
 import main.java.com.xiangxiang.genCodeByDDL.exception.BusinessException;
 import main.java.com.xiangxiang.genCodeByDDL.model.GenerateBySQLVO;
@@ -33,6 +30,8 @@ public class GeneratorFacade {
         // 生成 java 请求实体代码
         List<String> javaAddEntityCode = JavaAddRequestBuilder.buildJavaAddEntityCode(tableSchemas);
         List<String> javaEditEntityCode = JavaEditRequestBuilder.buildJavaEditEntityCode(tableSchemas);
+        List<String> javaQueryEntityCode = JavaQueryRequestBuilder.buildJavaQueryEntityCode(tableSchemas);
+        List<String> javaUpdateEntityCode = JavaUpdateRequestBuilder.buildJavaUpdateEntityCode(tableSchemas);
         List<String> javaEntityCode = JavaEntityCodeBuilder.buildJavaEntityCode(tableSchemas);
         // 生成控制层代码
         List<String> javaControllerCode = JavaControllerBuilder.buildJavaControllerCode(tableSchemas);
@@ -48,6 +47,8 @@ public class GeneratorFacade {
         generateBySQLVO.setJavaControllerCode(javaControllerCode);
         generateBySQLVO.setJavaAddEntityCode(javaAddEntityCode);
         generateBySQLVO.setJavaEditEntityCode(javaEditEntityCode);
+        generateBySQLVO.setJavaQueryEntityCode(javaQueryEntityCode);
+        generateBySQLVO.setJavaUpdateEntityCode(javaUpdateEntityCode);
         // 封装返回
         return  generateBySQLVO;
     }
