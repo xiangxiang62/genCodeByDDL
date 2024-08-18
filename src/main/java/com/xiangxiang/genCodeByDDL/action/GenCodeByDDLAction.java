@@ -85,7 +85,7 @@ public class GenCodeByDDLAction extends AnAction {
                                 createCodeFiles(javaControllerCode, generatorDir, "controller",null);
                             }
                             if (selectedOptions.getOrDefault("model", false)) {
-                                createCodeFiles(javaEntityCodeList, generatorDir, "model",null);
+                                createCodeFiles(javaEntityCodeList, generatorDir, "model","entity");
                             }
                             if (selectedOptions.getOrDefault("dto", false)) {
                                 createDTOFiles(javaAddEntityCode, generatorDir);
@@ -184,7 +184,7 @@ public class GenCodeByDDLAction extends AnAction {
 
         VirtualFile entityDir = subPackageDir;
 
-        if ("dto".equals(generator) || "vo".equals(generator)) {
+        if ("dto".equals(generator) || "vo".equals(generator) || "entity".equals(generator)) {
             entityDir = getGeneratorDir(subPackageDir, generator);
         }
 
