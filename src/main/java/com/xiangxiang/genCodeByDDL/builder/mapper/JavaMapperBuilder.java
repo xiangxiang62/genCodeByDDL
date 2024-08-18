@@ -5,8 +5,8 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
 import main.java.com.xiangxiang.genCodeByDDL.model.TableSchema;
-import main.java.com.xiangxiang.genCodeByDDL.model.dto.entity.JavaEntityGenerateDTO;
 import main.java.com.xiangxiang.genCodeByDDL.model.dto.JavaMapperGenerateDTO;
+import main.java.com.xiangxiang.genCodeByDDL.model.dto.entity.JavaEntityGenerateDTO;
 import main.java.com.xiangxiang.genCodeByDDL.utils.StringUtils;
 
 import java.io.IOException;

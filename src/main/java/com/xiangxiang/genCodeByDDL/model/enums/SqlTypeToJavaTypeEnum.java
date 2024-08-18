@@ -2,9 +2,6 @@ package main.java.com.xiangxiang.genCodeByDDL.model.enums;
 
 import lombok.Getter;
 
-import java.util.Arrays;
-import java.util.List;
-
 /**
  * @Author 香香
  * @Date 2024-08-17 21:19

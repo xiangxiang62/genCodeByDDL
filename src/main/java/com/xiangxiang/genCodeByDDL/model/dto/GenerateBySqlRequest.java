@@ -1,7 +1,8 @@
 package main.java.com.xiangxiang.genCodeByDDL.model.dto;
 
-import java.io.Serializable;
 import lombok.Data;
+
+import java.io.Serializable;
 
 /**
  * 根据 SQL 生成请求体
