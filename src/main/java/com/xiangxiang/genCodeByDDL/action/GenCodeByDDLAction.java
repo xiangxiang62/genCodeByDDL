@@ -344,6 +344,24 @@ public class GenCodeByDDLAction extends AnAction {
         }
 
         @Override
+        protected JComponent createSouthPanel() {
+            JPanel southPanel = (JPanel) super.createSouthPanel();
+
+            // 创建 帮助 按钮
+            JButton helpButton = new JButton("帮助❓");
+            helpButton.addActionListener(e -> showHelpDialog());
+            southPanel.add(helpButton, BorderLayout.WEST);
+
+            return southPanel;
+        }
+
+        private void showHelpDialog() {
+            String message = "生成的代码需要根据自己的实际需求进行重构，例如 mapper.xml 中的 type 路径等。\n" +
+                            "建议选择拖动重构。";
+            Messages.showMessageDialog(message, "帮助", Messages.getInformationIcon());
+        }
+
+        @Override
         protected void doOKAction() {
             selectedOptions.put("controller", controllerCheckBox.isSelected());
             selectedOptions.put("model", modelCheckBox.isSelected());
@@ -358,4 +376,5 @@ public class GenCodeByDDLAction extends AnAction {
             return selectedOptions;
         }
     }
+
 }
