@@ -40,6 +40,9 @@ public class GenCodeByDDLAction extends AnAction {
         VirtualFile file = event.getDataContext().getData(com.intellij.openapi.actionSystem.CommonDataKeys.VIRTUAL_FILE);
         if (file != null && "sql".equals(file.getExtension())) {
             try {
+                // 刷新文件内容，确保读取的是最新内容
+                file.refresh(false, false);
+
                 // 读取 SQL 文件内容
                 String fileContent = new String(file.contentsToByteArray(), StandardCharsets.UTF_8);
 
