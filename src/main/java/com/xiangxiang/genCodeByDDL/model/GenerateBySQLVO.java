@@ -51,6 +51,10 @@ public class GenerateBySQLVO {
      */
     private List<String> javaUpdateEntityCode;
 
+    /**
+     * Java 视图实体代码
+     */
+    private List<String> javaEntityVOCode;
 
     /**
      * Java 对象代码
@@ -76,7 +80,7 @@ public class GenerateBySQLVO {
                            List<String> javaEntityCode, List<String> javaAddEntityCode,
                            List<String> javaEditEntityCode, List<String> javaObjectCode,
                            List<String> javaQueryEntityCode, List<String> javaUpdateEntityCode,
-                           List<String> javaControllerCode, String plantUmlCode) {
+                           List<String> javaControllerCode,List<String> javaEntityVOCode, String plantUmlCode) {
         this.README = README;
         this.dataList = dataList;
         this.dataJson = dataJson;
@@ -88,6 +92,15 @@ public class GenerateBySQLVO {
         this.javaEditEntityCode = javaEditEntityCode;
         this.javaQueryEntityCode = javaQueryEntityCode;
         this.javaUpdateEntityCode = javaUpdateEntityCode;
+        this.javaEntityVOCode = javaEntityVOCode;
+    }
+
+    public List<String> getJavaEntityVOCode() {
+        return javaEntityVOCode;
+    }
+
+    public void setJavaEntityVOCode(List<String> javaEntityVOCode) {
+        this.javaEntityVOCode = javaEntityVOCode;
     }
 
     public List<String> getJavaQueryEntityCode() {

@@ -57,6 +57,8 @@ public class GenCodeByDDLAction extends AnAction {
                 List<String> javaUpdateEntityCode = generateBySQLVO.getJavaUpdateEntityCode();
                 // 获取实体类代码
                 List<String> javaEntityCodeList = generateBySQLVO.getJavaEntityCode();
+                // 获取视图类代码
+                List<String> javaEntityVOCodeList = generateBySQLVO.getJavaEntityVOCode();
                 // 获取 README.md 文件
                 String README = generateBySQLVO.getREADME();
 
@@ -78,10 +80,10 @@ public class GenCodeByDDLAction extends AnAction {
 
                             // 根据用户选择生成相应的代码
                             if (selectedOptions.getOrDefault("controller", false)) {
-                                createCodeFiles(javaControllerCode, generatorDir, "controller");
+                                createCodeFiles(javaControllerCode, generatorDir, "controller",null);
                             }
                             if (selectedOptions.getOrDefault("model", false)) {
-                                createCodeFiles(javaEntityCodeList, generatorDir, "model");
+                                createCodeFiles(javaEntityCodeList, generatorDir, "model","dto");
                             }
                             if (selectedOptions.getOrDefault("dto", false)) {
                                 createDTOFiles(javaAddEntityCode, generatorDir);
@@ -97,6 +99,9 @@ public class GenCodeByDDLAction extends AnAction {
                             }
                             if (selectedOptions.getOrDefault("readme", false)) {
                                 createREADMEFile(Collections.singletonList(README), projectRoot);
+                            }
+                            if (selectedOptions.getOrDefault("vo", false)) {
+                                createCodeFiles(javaEntityVOCodeList, generatorDir, "model","vo");
                             }
 
                             // 在写操作完成后显示消息对话框
@@ -163,14 +168,14 @@ public class GenCodeByDDLAction extends AnAction {
      * @param subPackage   子包名（例如 "controller"、"model"）
      * @throws IOException 如果写入文件失败
      */
-    private void createCodeFiles(List<String> javaCodeList, VirtualFile generatorDir, String subPackage) throws IOException {
+    private void createCodeFiles(List<String> javaCodeList, VirtualFile generatorDir, String subPackage,String generator) throws IOException {
         // 获取或创建子包目录
         VirtualFile subPackageDir = getGeneratorDir(generatorDir, subPackage);
 
         VirtualFile entityDir = subPackageDir;
 
         if (subPackage.equals("model")) {
-            entityDir = getGeneratorDir(subPackageDir, "entity");
+            entityDir = getGeneratorDir(subPackageDir, generator);
         }
 
         // 将每个 Java 代码写入对应的文件
@@ -258,6 +263,7 @@ public class GenCodeByDDLAction extends AnAction {
         private JCheckBox READMECheckBox;
         private JCheckBox modelCheckBox;
         private JCheckBox dtoCheckBox;
+        private JCheckBox voCheckBox;
         private final Map<String, Boolean> selectedOptions = new HashMap<>();
 
         protected CodeGenerationDialog(@Nullable Project project) {
@@ -284,8 +290,10 @@ public class GenCodeByDDLAction extends AnAction {
             modelPanel.setPreferredSize(new Dimension(600, 450));
             modelCheckBox = new JCheckBox("Model");
             dtoCheckBox = new JCheckBox("DTO");
+            voCheckBox = new JCheckBox("VO");
             modelPanel.add(modelCheckBox);
             modelPanel.add(dtoCheckBox);
+            modelPanel.add(voCheckBox);
 
             // 创建 README 选项卡面板
             JPanel READMEPanel = new JPanel();
@@ -301,6 +309,7 @@ public class GenCodeByDDLAction extends AnAction {
                 modelCheckBox.setSelected(true);
                 dtoCheckBox.setSelected(true);
                 READMECheckBox.setSelected(true);
+                voCheckBox.setSelected(true);
             });
 
             // 创建一个面板来包含选项卡和按钮
@@ -322,6 +331,7 @@ public class GenCodeByDDLAction extends AnAction {
             selectedOptions.put("model", modelCheckBox.isSelected());
             selectedOptions.put("dto", dtoCheckBox.isSelected());
             selectedOptions.put("readme", READMECheckBox.isSelected());
+            selectedOptions.put("vo", voCheckBox.isSelected());
             super.doOKAction();
         }
 
