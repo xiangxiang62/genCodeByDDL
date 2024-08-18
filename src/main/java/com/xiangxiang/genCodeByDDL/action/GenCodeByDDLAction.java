@@ -111,7 +111,7 @@ public class GenCodeByDDLAction extends AnAction {
 
                             // 在写操作完成后显示消息对话框
                             ApplicationManager.getApplication().invokeLater(() -> {
-                                Messages.showMessageDialog("代码已生成并保存。", "成功", Messages.getInformationIcon());
+                                Messages.showMessageDialog("代码已生成并保存，生成位置：./generator。", "成功", Messages.getInformationIcon());
                             });
                         } catch (IOException e) {
                             ApplicationManager.getApplication().invokeLater(() -> {
