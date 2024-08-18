@@ -57,6 +57,11 @@ public class GenerateBySQLVO {
     private List<String> javaEntityVOCode;
 
     /**
+     * MapperXml代码
+     */
+    private List<String> mapperXmlCode;
+
+    /**
      * Java 对象代码
      */
     private List<String> javaObjectCode;
@@ -86,7 +91,8 @@ public class GenerateBySQLVO {
                            List<String> javaEditEntityCode, List<String> javaObjectCode,
                            List<String> javaQueryEntityCode, List<String> javaUpdateEntityCode,
                            List<String> javaControllerCode,List<String> javaEntityVOCode,
-                           String plantUmlCode,List<String> javaMapperCode) {
+                           String plantUmlCode,List<String> javaMapperCode,
+                            List<String> mapperXmlCode) {
         this.README = README;
         this.dataList = dataList;
         this.dataJson = dataJson;
@@ -100,6 +106,15 @@ public class GenerateBySQLVO {
         this.javaUpdateEntityCode = javaUpdateEntityCode;
         this.javaEntityVOCode = javaEntityVOCode;
         this.javaMapperCode = javaMapperCode;
+        this.mapperXmlCode = mapperXmlCode;
+    }
+
+    public List<String> getMapperXmlCode() {
+        return mapperXmlCode;
+    }
+
+    public void setMapperXmlCode(List<String> mapperXmlCode) {
+        this.mapperXmlCode = mapperXmlCode;
     }
 
     public List<String> getJavaMapperCode() {

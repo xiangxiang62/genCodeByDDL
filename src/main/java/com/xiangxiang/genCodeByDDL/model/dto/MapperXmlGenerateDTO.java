@@ -1,4 +1,4 @@
-package main.java.com.xiangxiang.genCodeByDDL.model.dto.entity;
+package main.java.com.xiangxiang.genCodeByDDL.model.dto;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -13,12 +13,18 @@ import java.util.List;
  */
 @Data
 @Accessors(chain = true)
-public class JavaEntityGenerateDTO {
+public class MapperXmlGenerateDTO {
+
 
     /**
      * 类名
      */
-    private String className;
+    private String packageName = "xiangxiang";
+
+    /**
+     * 大写表名名
+     */
+    private String caseTableName;
 
     /**
      * 类注释
@@ -44,7 +50,7 @@ public class JavaEntityGenerateDTO {
         /**
          * Java 类型
          */
-        private String entityType;
+        private String jdbcType;
 
         /**
          * 注释（字段中文名）

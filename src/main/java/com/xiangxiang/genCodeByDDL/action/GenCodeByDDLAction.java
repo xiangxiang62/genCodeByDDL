@@ -21,6 +21,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 插件主启动类，用于处理 SQL 文件并生成 Java 代码
@@ -64,6 +66,11 @@ public class GenCodeByDDLAction extends AnAction {
                 List<String> javaEntityVOCodeList = generateBySQLVO.getJavaEntityVOCode();
                 // 获取持久层代码
                 List<String> javaMapperCode = generateBySQLVO.getJavaMapperCode();
+                // 获取 mapperXml 代码
+                List<String> mapperXmlCode = generateBySQLVO.getMapperXmlCode();
+                System.out.println("========xml=========");
+                System.out.println(mapperXmlCode);
+                System.out.println("========xml=========");
                 // 获取 README.md 文件
                 String README = generateBySQLVO.getREADME();
 
@@ -85,10 +92,10 @@ public class GenCodeByDDLAction extends AnAction {
 
                             // 根据用户选择生成相应的代码
                             if (selectedOptions.getOrDefault("controller", false)) {
-                                createCodeFiles(javaControllerCode, generatorDir, "controller",null);
+                                createCodeFiles(javaControllerCode, generatorDir, "controller", null);
                             }
                             if (selectedOptions.getOrDefault("model", false)) {
-                                createCodeFiles(javaEntityCodeList, generatorDir, "model","entity");
+                                createCodeFiles(javaEntityCodeList, generatorDir, "model", "entity");
                             }
                             if (selectedOptions.getOrDefault("dto", false)) {
                                 createDTOFiles(javaAddEntityCode, generatorDir);
@@ -106,10 +113,13 @@ public class GenCodeByDDLAction extends AnAction {
                                 createREADMEFile(Collections.singletonList(README), projectRoot);
                             }
                             if (selectedOptions.getOrDefault("vo", false)) {
-                                createCodeFiles(javaEntityVOCodeList, generatorDir, "model","vo");
+                                createCodeFiles(javaEntityVOCodeList, generatorDir, "model", "vo");
                             }
                             if (selectedOptions.getOrDefault("mapper", false)) {
-                                createCodeFiles(javaMapperCode, generatorDir, "Mapper","");
+                                createCodeFiles(javaMapperCode, generatorDir, "Mapper", "");
+                            }
+                            if (selectedOptions.getOrDefault("mapperXml", false)) {
+                                createConfigCodeFiles(mapperXmlCode, generatorDir, "MapperXml");
                             }
 
                             // 在写操作完成后显示消息对话框
@@ -176,7 +186,7 @@ public class GenCodeByDDLAction extends AnAction {
      * @param subPackage   子包名（例如 "controller"、"model"）
      * @throws IOException 如果写入文件失败
      */
-    private void createCodeFiles(List<String> javaCodeList, VirtualFile generatorDir, String subPackage,String generator) throws IOException {
+    private void createCodeFiles(List<String> javaCodeList, VirtualFile generatorDir, String subPackage, String generator) throws IOException {
         // 获取或创建子包目录
         VirtualFile subPackageDir;
         if (subPackage.equals("")) {
@@ -197,6 +207,31 @@ public class GenCodeByDDLAction extends AnAction {
             if (className != null) {
                 VirtualFile newFile = entityDir.createChildData(this, className + ".java");
                 newFile.setBinaryContent(javaCode.getBytes(StandardCharsets.UTF_8));
+            }
+        }
+
+    }
+
+    /**
+     * 创建 Controller、Model 或 DTO 代码文件并写入到对应的目录
+     *
+     * @param javaCodeList 需要创建的 Java 代码列表
+     * @param generatorDir 目标目录
+     * @param subPackage   子包名（例如 "controller"、"model"）
+     * @throws IOException 如果写入文件失败
+     */
+    private void createConfigCodeFiles(List<String> javaCodeList, VirtualFile generatorDir, String subPackage) throws IOException {
+        // 获取或创建子包目录
+        VirtualFile subPackageDir;
+        subPackageDir = getGeneratorDir(generatorDir, subPackage);
+
+// 将每个 Java 代码写入对应的文件
+        for (String javaCode : javaCodeList) {
+            String className = extractClassNameFromXML(javaCode);
+            if (className != null) {
+                VirtualFile newFile = subPackageDir.createChildData(this, className + ".xml");
+                newFile.setBinaryContent(javaCode.getBytes(StandardCharsets.UTF_8));
+                System.out.println("写入成功");
             }
         }
 
@@ -269,6 +304,22 @@ public class GenCodeByDDLAction extends AnAction {
     }
 
     /**
+     * 从 XML 内容中提取 .mapper. 之后的类名
+     *
+     * @param xmlContent XML 内容
+     * @return 提取的类名，如果无法提取则返回 null
+     */
+    private String extractClassNameFromXML(String xmlContent) {
+        // 定义正则表达式来匹配 .mapper. 后的类名
+        Pattern pattern = Pattern.compile("namespace=\"[^\"]*\\.mapper\\.(\\w+)Mapper\"");
+        Matcher matcher = pattern.matcher(xmlContent);
+        if (matcher.find()) {
+            return matcher.group(1) + "Mapper";
+        }
+        return null;
+    }
+
+    /**
      * 自定义对话框类，用于选择生成的代码类型
      */
     static class CodeGenerationDialog extends DialogWrapper {
@@ -279,6 +330,7 @@ public class GenCodeByDDLAction extends AnAction {
         private JCheckBox dtoCheckBox;
         private JCheckBox voCheckBox;
         private JCheckBox mapperCheckBox;
+        private JCheckBox mapperXmlCheckBox;
         private final Map<String, Boolean> selectedOptions = new HashMap<>();
 
         protected CodeGenerationDialog(@Nullable Project project) {
@@ -319,6 +371,13 @@ public class GenCodeByDDLAction extends AnAction {
             READMECheckBox = new JCheckBox("README");
             READMEPanel.add(READMECheckBox);
 
+            // 创建 配置 选项卡面板
+            JPanel ConfigPanel = new JPanel();
+            ConfigPanel.setLayout(new BoxLayout(ConfigPanel, BoxLayout.Y_AXIS));
+            ConfigPanel.setPreferredSize(new Dimension(600, 450));
+            mapperXmlCheckBox = new JCheckBox("Mapper.xml（MyBatisPlus-3）");
+            ConfigPanel.add(mapperXmlCheckBox);
+
             // 创建 "我直接一把梭哈" 按钮
             JButton selectAllButton = new JButton("我全都要！！！");
             selectAllButton.addActionListener(e -> {
@@ -328,6 +387,7 @@ public class GenCodeByDDLAction extends AnAction {
                 READMECheckBox.setSelected(true);
                 voCheckBox.setSelected(true);
                 mapperCheckBox.setSelected(true);
+                mapperXmlCheckBox.setSelected(true);
             });
 
             // 创建一个面板来包含选项卡和按钮
@@ -339,6 +399,7 @@ public class GenCodeByDDLAction extends AnAction {
             tabbedPane.addTab("逻辑相关", controllerPanel);
             tabbedPane.addTab("实体类相关", modelPanel);
             tabbedPane.addTab("插件自述", READMEPanel);
+            tabbedPane.addTab("配置自述", ConfigPanel);
 
             return mainPanel;
         }
@@ -357,7 +418,7 @@ public class GenCodeByDDLAction extends AnAction {
 
         private void showHelpDialog() {
             String message = "生成的代码需要根据自己的实际需求进行重构，例如 mapper.xml 中的 type 路径等。\n" +
-                            "建议选择拖动重构。";
+                    "建议选择拖动重构。";
             Messages.showMessageDialog(message, "帮助", Messages.getInformationIcon());
         }
 
@@ -369,12 +430,33 @@ public class GenCodeByDDLAction extends AnAction {
             selectedOptions.put("readme", READMECheckBox.isSelected());
             selectedOptions.put("vo", voCheckBox.isSelected());
             selectedOptions.put("mapper", mapperCheckBox.isSelected());
+            selectedOptions.put("mapperXml", mapperXmlCheckBox.isSelected());
             super.doOKAction();
         }
 
         public Map<String, Boolean> getSelectedOptions() {
             return selectedOptions;
         }
+    }
+
+    public static void main(String[] args) {
+        GenCodeByDDLAction extractor = new GenCodeByDDLAction();
+
+        // 测试 Java 代码提取
+        String javaCode = "public class ExecuteInfoMapper { ... }";
+//        System.out.println("Java Class Name: " + extractor.extractClassNameFromJava(javaCode));
+
+        // 测试 XML 内容提取
+        String xmlContent = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<!DOCTYPE mapper PUBLIC \"-//mybatis.org//DTD Mapper 3.0//EN\"\n" +
+                "\"http://mybatis.org/dtd/mybatis-3-mapper.dtd\">\n" +
+                "<mapper namespace=\"com.cong.sqldog.mapper.ExecuteInfoMapper\">\n" +
+                "    <resultMap id=\"BaseResultMap\" type=\"com.cong.sqldog.model.entity.ExecuteInfo\">\n" +
+                "        <id property=\"id\" column=\"id\" jdbcType=\"BIGINT\"/>\n" +
+                "        <!-- other fields -->\n" +
+                "    </resultMap>\n" +
+                "</mapper>";
+        System.out.println("XML Class Name: " + extractor.extractClassNameFromXML(xmlContent));
     }
 
 }
