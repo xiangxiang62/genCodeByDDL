@@ -34,6 +34,7 @@ public class GeneratorFacade {
         List<String> javaUpdateEntityCode = JavaUpdateRequestBuilder.buildJavaUpdateEntityCode(tableSchemas);
         List<String> javaEntityCode = JavaEntityCodeBuilder.buildJavaEntityCode(tableSchemas);
         List<String> javaEntityVOCode = JavaEntityVOBuilder.buildJavaEntityVOCode(tableSchemas);
+        List<String> javaMapperCode = JavaMapperBuilder.buildJavaMapperCode(tableSchemas);
         String pluginsREADME = pluginsREADMEBuilder.buildREADME();
         // 生成控制层代码
         List<String> javaControllerCode = JavaControllerBuilder.buildJavaControllerCode(tableSchemas);
@@ -52,6 +53,7 @@ public class GeneratorFacade {
         generateBySQLVO.setJavaQueryEntityCode(javaQueryEntityCode);
         generateBySQLVO.setJavaUpdateEntityCode(javaUpdateEntityCode);
         generateBySQLVO.setJavaEntityVOCode(javaEntityVOCode);
+        generateBySQLVO.setJavaMapperCode(javaMapperCode);
         generateBySQLVO.setREADME(pluginsREADME);
         // 封装返回
         return  generateBySQLVO;

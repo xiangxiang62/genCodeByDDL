@@ -62,6 +62,11 @@ public class GenerateBySQLVO {
     private List<String> javaObjectCode;
 
     /**
+     * Java 持久层代码
+     */
+    private List<String> javaMapperCode;
+
+    /**
      * TypeScript 类型代码
      */
     private List<String> javaControllerCode;
@@ -80,7 +85,8 @@ public class GenerateBySQLVO {
                            List<String> javaEntityCode, List<String> javaAddEntityCode,
                            List<String> javaEditEntityCode, List<String> javaObjectCode,
                            List<String> javaQueryEntityCode, List<String> javaUpdateEntityCode,
-                           List<String> javaControllerCode,List<String> javaEntityVOCode, String plantUmlCode) {
+                           List<String> javaControllerCode,List<String> javaEntityVOCode,
+                           String plantUmlCode,List<String> javaMapperCode) {
         this.README = README;
         this.dataList = dataList;
         this.dataJson = dataJson;
@@ -93,6 +99,15 @@ public class GenerateBySQLVO {
         this.javaQueryEntityCode = javaQueryEntityCode;
         this.javaUpdateEntityCode = javaUpdateEntityCode;
         this.javaEntityVOCode = javaEntityVOCode;
+        this.javaMapperCode = javaMapperCode;
+    }
+
+    public List<String> getJavaMapperCode() {
+        return javaMapperCode;
+    }
+
+    public void setJavaMapperCode(List<String> javaMapperCode) {
+        this.javaMapperCode = javaMapperCode;
     }
 
     public List<String> getJavaEntityVOCode() {

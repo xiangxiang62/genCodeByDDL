@@ -59,6 +59,8 @@ public class GenCodeByDDLAction extends AnAction {
                 List<String> javaEntityCodeList = generateBySQLVO.getJavaEntityCode();
                 // 获取视图类代码
                 List<String> javaEntityVOCodeList = generateBySQLVO.getJavaEntityVOCode();
+                // 获取持久层代码
+                List<String> javaMapperCode = generateBySQLVO.getJavaMapperCode();
                 // 获取 README.md 文件
                 String README = generateBySQLVO.getREADME();
 
@@ -83,7 +85,7 @@ public class GenCodeByDDLAction extends AnAction {
                                 createCodeFiles(javaControllerCode, generatorDir, "controller",null);
                             }
                             if (selectedOptions.getOrDefault("model", false)) {
-                                createCodeFiles(javaEntityCodeList, generatorDir, "model","dto");
+                                createCodeFiles(javaEntityCodeList, generatorDir, "model",null);
                             }
                             if (selectedOptions.getOrDefault("dto", false)) {
                                 createDTOFiles(javaAddEntityCode, generatorDir);
@@ -102,6 +104,9 @@ public class GenCodeByDDLAction extends AnAction {
                             }
                             if (selectedOptions.getOrDefault("vo", false)) {
                                 createCodeFiles(javaEntityVOCodeList, generatorDir, "model","vo");
+                            }
+                            if (selectedOptions.getOrDefault("mapper", false)) {
+                                createCodeFiles(javaMapperCode, generatorDir, "Mapper","");
                             }
 
                             // 在写操作完成后显示消息对话框
@@ -170,15 +175,20 @@ public class GenCodeByDDLAction extends AnAction {
      */
     private void createCodeFiles(List<String> javaCodeList, VirtualFile generatorDir, String subPackage,String generator) throws IOException {
         // 获取或创建子包目录
-        VirtualFile subPackageDir = getGeneratorDir(generatorDir, subPackage);
+        VirtualFile subPackageDir;
+        if (subPackage.equals("")) {
+            subPackageDir = generatorDir;
+        } else {
+            subPackageDir = getGeneratorDir(generatorDir, subPackage);
+        }
 
         VirtualFile entityDir = subPackageDir;
 
-        if (subPackage.equals("model")) {
+        if ("dto".equals(generator) || "vo".equals(generator)) {
             entityDir = getGeneratorDir(subPackageDir, generator);
         }
 
-        // 将每个 Java 代码写入对应的文件
+// 将每个 Java 代码写入对应的文件
         for (String javaCode : javaCodeList) {
             String className = extractClassName(javaCode);
             if (className != null) {
@@ -186,6 +196,7 @@ public class GenCodeByDDLAction extends AnAction {
                 newFile.setBinaryContent(javaCode.getBytes(StandardCharsets.UTF_8));
             }
         }
+
     }
 
     /**
@@ -244,7 +255,7 @@ public class GenCodeByDDLAction extends AnAction {
     private String extractClassName(String javaCode) {
         String[] lines = javaCode.split("\\n");
         for (String line : lines) {
-            if (line.startsWith("public class")) {
+            if (line.startsWith("public class") || line.startsWith("public interface")) {
                 String[] parts = line.split("\\s+");
                 if (parts.length > 2) {
                     return parts[2];
@@ -264,6 +275,7 @@ public class GenCodeByDDLAction extends AnAction {
         private JCheckBox modelCheckBox;
         private JCheckBox dtoCheckBox;
         private JCheckBox voCheckBox;
+        private JCheckBox mapperCheckBox;
         private final Map<String, Boolean> selectedOptions = new HashMap<>();
 
         protected CodeGenerationDialog(@Nullable Project project) {
@@ -282,7 +294,9 @@ public class GenCodeByDDLAction extends AnAction {
             controllerPanel.setLayout(new BoxLayout(controllerPanel, BoxLayout.Y_AXIS));
             controllerPanel.setPreferredSize(new Dimension(600, 450));
             controllerCheckBox = new JCheckBox("Controller");
+            mapperCheckBox = new JCheckBox("Mapper");
             controllerPanel.add(controllerCheckBox);
+            controllerPanel.add(mapperCheckBox);
 
             // 创建 Model 选项卡面板，包括 DTO 选项
             JPanel modelPanel = new JPanel();
@@ -310,6 +324,7 @@ public class GenCodeByDDLAction extends AnAction {
                 dtoCheckBox.setSelected(true);
                 READMECheckBox.setSelected(true);
                 voCheckBox.setSelected(true);
+                mapperCheckBox.setSelected(true);
             });
 
             // 创建一个面板来包含选项卡和按钮
@@ -332,6 +347,7 @@ public class GenCodeByDDLAction extends AnAction {
             selectedOptions.put("dto", dtoCheckBox.isSelected());
             selectedOptions.put("readme", READMECheckBox.isSelected());
             selectedOptions.put("vo", voCheckBox.isSelected());
+            selectedOptions.put("mapper", mapperCheckBox.isSelected());
             super.doOKAction();
         }
 
