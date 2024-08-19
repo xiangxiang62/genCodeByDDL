@@ -15,6 +15,11 @@ import java.util.Map;
 public class GenerateBySQLVO {
 
     /**
+     * knife4jConfig
+     */
+    private String knife4jConfig;
+
+    /**
      * README
      */
     private String README;

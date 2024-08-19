@@ -40,6 +40,8 @@ public class GenCodeByDDLAction extends AnAction {
             Messages.showMessageDialog("找不到项目。", "错误", Messages.getErrorIcon());
             return;
         }
+        // 项目名
+        String projectName = project.getName();
         // 获取当前选中的文件
         VirtualFile file = event.getDataContext().getData(com.intellij.openapi.actionSystem.CommonDataKeys.VIRTUAL_FILE);
         if (file != null && "sql".equals(file.getExtension())) {
@@ -67,7 +69,7 @@ public class GenCodeByDDLAction extends AnAction {
                     }
 
                     // 根据 SQL 文件内容生成 Java 代码
-                    GenerateBySQLVO generateBySQLVO = TableSchemaBuilder.buildFromDDL(fileContent, packageName);
+                    GenerateBySQLVO generateBySQLVO = TableSchemaBuilder.buildFromDDL(fileContent, packageName,projectName);
                     // 获取控制层代码
                     List<String> javaControllerCode = generateBySQLVO.getJavaControllerCode();
                     // 获取 Service 层代码
@@ -97,6 +99,8 @@ public class GenCodeByDDLAction extends AnAction {
                     String README = generateBySQLVO.getREADME();
                     // 获取 依赖 文件
                     String pomDep = generateBySQLVO.getPomDep();
+                    // 获取 Knife4J
+                    String knife4jConfig = generateBySQLVO.getKnife4jConfig();
 
                     // 执行写操作的代码
                     WriteCommandAction.runWriteCommandAction(project, () -> {
@@ -164,7 +168,10 @@ public class GenCodeByDDLAction extends AnAction {
                             if (selectedOptions.getOrDefault("pom", false)) {
                                 createPomDepFile(Collections.singletonList(pomDep), projectRoot);
                             }
-
+                            // 生成跨域配置
+                            if (selectedOptions.getOrDefault("knife4j", false)) {
+                                createCodeFiles(Collections.singletonList(knife4jConfig), generatorDir, "config", null);
+                            }
                             // 在写操作完成后显示消息对话框
                             ApplicationManager.getApplication().invokeLater(() -> {
                                 Messages.showMessageDialog("代码已生成并保存，生成位置：./generator。", "成功", Messages.getInformationIcon());
@@ -399,6 +406,7 @@ public class GenCodeByDDLAction extends AnAction {
         private JCheckBox corsConfigCheckBox;
         private JTextField packageNameField;
         private JCheckBox pomDepCheckBox;
+        private JCheckBox knife4jConfigCheckBox;
         private final Map<String, Boolean> selectedOptions = new HashMap<>();
 
         protected CodeGenerationDialog(@Nullable Project project) {
@@ -464,9 +472,11 @@ public class GenCodeByDDLAction extends AnAction {
             mapperXmlCheckBox = new JCheckBox("Mapper.xml（MyBatisPlus-3）");
             corsConfigCheckBox = new JCheckBox("CorsConfig（跨域配置）");
             pomDepCheckBox = new JCheckBox("Pom.xml（生成代码所需的 mvn 依赖）");
+            knife4jConfigCheckBox = new JCheckBox("knife4jConfig（接口文档）");
             configPanel.add(mapperXmlCheckBox);
             configPanel.add(pomDepCheckBox);
             configPanel.add(corsConfigCheckBox);
+            configPanel.add(knife4jConfigCheckBox);
 
             // 创建 "我全都要！！！" 按钮
             JButton selectAllButton = new JButton("我全都要！！！");
@@ -482,6 +492,7 @@ public class GenCodeByDDLAction extends AnAction {
                 serviceImplCheckBox.setSelected(true);
                 corsConfigCheckBox.setSelected(true);
                 pomDepCheckBox.setSelected(true);
+                knife4jConfigCheckBox.setSelected(true);
             });
 
             // 创建一个面板来包含输入框、选项卡和按钮
@@ -530,6 +541,7 @@ public class GenCodeByDDLAction extends AnAction {
             selectedOptions.put("serviceImpl", serviceImplCheckBox.isSelected());
             selectedOptions.put("corsConfig", corsConfigCheckBox.isSelected());
             selectedOptions.put("pom", pomDepCheckBox.isSelected());
+            selectedOptions.put("knife4j", knife4jConfigCheckBox.isSelected());
             super.doOKAction();
         }
 

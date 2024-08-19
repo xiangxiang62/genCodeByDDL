@@ -1,6 +1,7 @@
 package main.java.com.xiangxiang.genCodeByDDL.generate;
 
 import main.java.com.xiangxiang.genCodeByDDL.builder.config.JavaConfigBuilder;
+import main.java.com.xiangxiang.genCodeByDDL.builder.config.Knife4jConfigBuilder;
 import main.java.com.xiangxiang.genCodeByDDL.builder.controller.JavaControllerBuilder;
 import main.java.com.xiangxiang.genCodeByDDL.builder.dto.JavaAddRequestBuilder;
 import main.java.com.xiangxiang.genCodeByDDL.builder.dto.JavaEditRequestBuilder;
@@ -29,7 +30,7 @@ public class GeneratorFacade {
     }
 
 
-    public static GenerateBySQLVO generateAllBySQL(List<TableSchema> tableSchemas,String packageName) {
+    public static GenerateBySQLVO generateAllBySQL(List<TableSchema> tableSchemas,String packageName,String projectName) {
         // 校验
 //        validSchema(tableSchemas);
         System.out.println("开始构建数据");
@@ -69,6 +70,8 @@ public class GeneratorFacade {
         // 生成控制层代码
         List<String> javaControllerCode = JavaControllerBuilder.buildJavaControllerCode(tableSchemas,packageName);
 
+        String knife4jConfig = Knife4jConfigBuilder.buildKnife4jConfig(tableSchemas, packageName, projectName);
+
         System.out.println("建数据结束");
         GenerateBySQLVO generateBySQLVO = new GenerateBySQLVO();
         generateBySQLVO.setJavaEntityCode(javaEntityCode);
@@ -85,6 +88,7 @@ public class GeneratorFacade {
         generateBySQLVO.setJavaServiceImplCode(javaServiceImplCode);
         generateBySQLVO.setJavaCorsConfigCode(javaCorsConfigCode);
         generateBySQLVO.setPomDep(PomDep);
+        generateBySQLVO.setKnife4jConfig(knife4jConfig);
         // 封装返回
         return  generateBySQLVO;
     }

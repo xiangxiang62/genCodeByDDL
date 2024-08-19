@@ -31,6 +31,13 @@
         <scope>provided</scope>
     </dependency>
 
+    <!-- Knife4j -->
+    <dependency>
+        <groupId>com.github.xiaoymin</groupId>
+        <artifactId>knife4j-spring-boot-starter</artifactId>
+        <version>4.0.3</version> <!-- 请根据实际需要调整版本 -->
+    </dependency>
+
     <!-- Hutool -->
     <dependency>
         <groupId>cn.hutool</groupId>

@@ -1,7 +1,7 @@
-package com.${packageName}.mapper;
+package ${packageName}.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.${packageName}.model.entity.ExecuteInfo;
+import ${packageName}.model.entity.ExecuteInfo;
 
 /**
  * @author GenCodeByDDLPlugins
