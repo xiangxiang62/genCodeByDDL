@@ -56,7 +56,7 @@ public class TableSchemaBuilder {
             List<String> createTableStatements = new ArrayList<>();
 
             // 正则表达式匹配 CREATE TABLE 语句（支持各种大小写组合和 IF NOT EXISTS 子句）
-            Pattern pattern = Pattern.compile("(?i)CREATE\\s+TABLE\\s+IF\\s+NOT\\s+EXISTS\\s*`?\\w+`?\\s*\\((.*?)\\)\\s*(COMMENT\\s*=\\s*'[^']*')?(;|$)", Pattern.DOTALL);
+            Pattern pattern = Pattern.compile("(?i)CREATE\\s+TABLE\\s*(IF\\s+NOT\\s+EXISTS\\s*)?`?\\w+`?\\s*\\((.*?)\\)\\s*(ENGINE\\s*=\\s*\\w+)?\\s*(DEFAULT\\s+CHARSET\\s*=\\s*\\w+)?\\s*(COMMENT\\s*=\\s*'[^']*')?(;|$)", Pattern.DOTALL);
             Matcher matcher = pattern.matcher(sql);
 
             while (matcher.find()) {
@@ -136,8 +136,8 @@ public class TableSchemaBuilder {
      * @return 移除外键约束后的 SQL 语句
      */
     private static String removeForeignKeyConstraints(String sql) {
-        // 匹配整个 SQL 语句中的外键约束部分，包括外键约束前后的逗号
-        Pattern pattern = Pattern.compile("(?i)(,\\s*FOREIGN\\s+KEY\\s*\\(.*?\\)\\s*REFERENCES\\s*\\w+\\s*\\(.*?\\))", Pattern.DOTALL);
+        // 匹配外键约束部分
+        Pattern pattern = Pattern.compile("(?i),\\s*FOREIGN\\s+KEY\\s*\\(.*?\\)\\s*REFERENCES\\s*\\w+\\s*\\(.*?\\)(?:\\s*COMMENT\\s*'.*?')?", Pattern.DOTALL);
         Matcher matcher = pattern.matcher(sql);
 
         StringBuffer sb = new StringBuffer();
@@ -169,6 +169,7 @@ public class TableSchemaBuilder {
         // 去掉多余的空白字符
         return sb.toString().trim();
     }
+
 
 
 

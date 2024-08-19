@@ -401,11 +401,11 @@ public class GenCodeByDDLAction extends AnAction {
             // 创建 Controller 选项卡面板
             JPanel controllerPanel = new JPanel();
             controllerPanel.setLayout(new BoxLayout(controllerPanel, BoxLayout.Y_AXIS));
-            controllerPanel.setPreferredSize(new Dimension(600, 450));
-            controllerCheckBox = new JCheckBox("Controller");
-            mapperCheckBox = new JCheckBox("Mapper");
-            serviceCheckBox = new JCheckBox("Service");
-            serviceImplCheckBox = new JCheckBox("ServiceImpl");
+            controllerPanel.setPreferredSize(new Dimension(400, 250));
+            controllerCheckBox = new JCheckBox("Controller（控制器） ");
+            mapperCheckBox = new JCheckBox("Mapper（映射器）");
+            serviceCheckBox = new JCheckBox("Service（服务层）");
+            serviceImplCheckBox = new JCheckBox("ServiceImpl（服务实现类）");
             controllerPanel.add(controllerCheckBox);
             controllerPanel.add(mapperCheckBox);
             controllerPanel.add(serviceCheckBox);
@@ -414,10 +414,10 @@ public class GenCodeByDDLAction extends AnAction {
             // 创建 Model 选项卡面板，包括 DTO 选项
             JPanel modelPanel = new JPanel();
             modelPanel.setLayout(new BoxLayout(modelPanel, BoxLayout.Y_AXIS));
-            modelPanel.setPreferredSize(new Dimension(600, 450));
-            modelCheckBox = new JCheckBox("Model");
-            dtoCheckBox = new JCheckBox("DTO");
-            voCheckBox = new JCheckBox("VO");
+            modelPanel.setPreferredSize(new Dimension(400, 250));
+            modelCheckBox = new JCheckBox("Entity（实体）");
+            dtoCheckBox = new JCheckBox("DTO（数据传输对象）");
+            voCheckBox = new JCheckBox("VO（数据返回对象）");
             modelPanel.add(modelCheckBox);
             modelPanel.add(dtoCheckBox);
             modelPanel.add(voCheckBox);
@@ -425,16 +425,16 @@ public class GenCodeByDDLAction extends AnAction {
             // 创建 README 选项卡面板
             JPanel readmePanel = new JPanel();
             readmePanel.setLayout(new BoxLayout(readmePanel, BoxLayout.Y_AXIS));
-            readmePanel.setPreferredSize(new Dimension(600, 450));
-            readmeCheckBox = new JCheckBox("README");
+            readmePanel.setPreferredSize(new Dimension(400, 250));
+            readmeCheckBox = new JCheckBox("README（插件介绍）");
             readmePanel.add(readmeCheckBox);
 
             // 创建 配置 选项卡面板
             JPanel configPanel = new JPanel();
             configPanel.setLayout(new BoxLayout(configPanel, BoxLayout.Y_AXIS));
-            configPanel.setPreferredSize(new Dimension(600, 450));
+            configPanel.setPreferredSize(new Dimension(400, 250));
             mapperXmlCheckBox = new JCheckBox("Mapper.xml（MyBatisPlus-3）");
-            corsConfigCheckBox = new JCheckBox("corsConfig（跨域配置）");
+            corsConfigCheckBox = new JCheckBox("CorsConfig（跨域配置）");
             configPanel.add(mapperXmlCheckBox);
             configPanel.add(corsConfigCheckBox);
 
