@@ -9,6 +9,7 @@ import main.java.com.xiangxiang.genCodeByDDL.builder.entity.JavaEntityCodeBuilde
 import main.java.com.xiangxiang.genCodeByDDL.builder.mapper.JavaMapperBuilder;
 import main.java.com.xiangxiang.genCodeByDDL.builder.mapper.MapperXmlBuilder;
 import main.java.com.xiangxiang.genCodeByDDL.builder.readme.pluginsREADMEBuilder;
+import main.java.com.xiangxiang.genCodeByDDL.builder.service.JavaServiceBuilder;
 import main.java.com.xiangxiang.genCodeByDDL.builder.vo.JavaEntityVOBuilder;
 import main.java.com.xiangxiang.genCodeByDDL.common.ErrorCode;
 import main.java.com.xiangxiang.genCodeByDDL.exception.BusinessException;
@@ -45,6 +46,7 @@ public class GeneratorFacade {
         List<String> javaEntityVOCode = JavaEntityVOBuilder.buildJavaEntityVOCode(tableSchemas);
         List<String> javaMapperCode = JavaMapperBuilder.buildJavaMapperCode(tableSchemas);
         List<String> mapperXmlCode = MapperXmlBuilder.buildMapperXmlCode(tableSchemas);
+        List<String> javaServiceCode = JavaServiceBuilder.buildJavaServiceCode(tableSchemas);
         String pluginsREADME = pluginsREADMEBuilder.buildREADME();
         // 生成控制层代码
         List<String> javaControllerCode = JavaControllerBuilder.buildJavaControllerCode(tableSchemas);
@@ -66,6 +68,7 @@ public class GeneratorFacade {
         generateBySQLVO.setJavaMapperCode(javaMapperCode);
         generateBySQLVO.setREADME(pluginsREADME);
         generateBySQLVO.setMapperXmlCode(mapperXmlCode);
+        generateBySQLVO.setJavaServiceCode(javaServiceCode);
         // 封装返回
         return  generateBySQLVO;
     }

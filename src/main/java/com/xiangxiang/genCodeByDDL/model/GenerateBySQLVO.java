@@ -72,9 +72,14 @@ public class GenerateBySQLVO {
     private List<String> javaMapperCode;
 
     /**
-     * TypeScript 类型代码
+     * Controller 类型代码
      */
     private List<String> javaControllerCode;
+
+    /**
+     * Service 类型代码
+     */
+    private List<String> javaServiceCode;
 
     /**
      * PlantUML 类型代码
@@ -92,7 +97,7 @@ public class GenerateBySQLVO {
                            List<String> javaQueryEntityCode, List<String> javaUpdateEntityCode,
                            List<String> javaControllerCode,List<String> javaEntityVOCode,
                            String plantUmlCode,List<String> javaMapperCode,
-                            List<String> mapperXmlCode) {
+                            List<String> mapperXmlCode,List<String> javaServiceCode) {
         this.README = README;
         this.dataList = dataList;
         this.dataJson = dataJson;
@@ -107,6 +112,15 @@ public class GenerateBySQLVO {
         this.javaEntityVOCode = javaEntityVOCode;
         this.javaMapperCode = javaMapperCode;
         this.mapperXmlCode = mapperXmlCode;
+        this.javaServiceCode = javaServiceCode;
+    }
+
+    public List<String> getJavaServiceCode() {
+        return javaServiceCode;
+    }
+
+    public void setJavaServiceCode(List<String> javaServiceCode) {
+        this.javaServiceCode = javaServiceCode;
     }
 
     public List<String> getMapperXmlCode() {

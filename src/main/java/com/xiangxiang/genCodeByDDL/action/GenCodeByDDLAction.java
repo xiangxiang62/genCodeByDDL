@@ -52,6 +52,8 @@ public class GenCodeByDDLAction extends AnAction {
                 GenerateBySQLVO generateBySQLVO = TableSchemaBuilder.buildFromDDL(fileContent);
                 // 获取控制层代码
                 List<String> javaControllerCode = generateBySQLVO.getJavaControllerCode();
+                // 获取 Service 层代码
+                List<String> javaServiceCode = generateBySQLVO.getJavaServiceCode();
                 // 获取新增 DTO 代码
                 List<String> javaAddEntityCode = generateBySQLVO.getJavaAddEntityCode();
                 // 获取编辑 DTO 代码
@@ -92,6 +94,10 @@ public class GenCodeByDDLAction extends AnAction {
                             // 生成 controller
                             if (selectedOptions.getOrDefault("controller", false)) {
                                 createCodeFiles(javaControllerCode, generatorDir, "controller", null);
+                            }
+                            // 生成 service
+                            if (selectedOptions.getOrDefault("service", false)) {
+                                createCodeFiles(javaServiceCode, generatorDir, "service", null);
                             }
                             // 生成 entity 实体类
                             if (selectedOptions.getOrDefault("model", false)) {
@@ -337,6 +343,7 @@ public class GenCodeByDDLAction extends AnAction {
         private JCheckBox voCheckBox;
         private JCheckBox mapperCheckBox;
         private JCheckBox mapperXmlCheckBox;
+        private JCheckBox serviceCheckBox;
         private final Map<String, Boolean> selectedOptions = new HashMap<>();
 
         protected CodeGenerationDialog(@Nullable Project project) {
@@ -356,8 +363,10 @@ public class GenCodeByDDLAction extends AnAction {
             controllerPanel.setPreferredSize(new Dimension(600, 450));
             controllerCheckBox = new JCheckBox("Controller");
             mapperCheckBox = new JCheckBox("Mapper");
+            serviceCheckBox = new JCheckBox("Service");
             controllerPanel.add(controllerCheckBox);
             controllerPanel.add(mapperCheckBox);
+            controllerPanel.add(serviceCheckBox);
 
             // 创建 Model 选项卡面板，包括 DTO 选项
             JPanel modelPanel = new JPanel();
@@ -394,6 +403,7 @@ public class GenCodeByDDLAction extends AnAction {
                 voCheckBox.setSelected(true);
                 mapperCheckBox.setSelected(true);
                 mapperXmlCheckBox.setSelected(true);
+                serviceCheckBox.setSelected(true);
             });
 
             // 创建一个面板来包含选项卡和按钮
@@ -437,6 +447,7 @@ public class GenCodeByDDLAction extends AnAction {
             selectedOptions.put("vo", voCheckBox.isSelected());
             selectedOptions.put("mapper", mapperCheckBox.isSelected());
             selectedOptions.put("mapperXml", mapperXmlCheckBox.isSelected());
+            selectedOptions.put("service", serviceCheckBox.isSelected());
             super.doOKAction();
         }
 
