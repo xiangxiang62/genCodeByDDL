@@ -44,7 +44,7 @@ public class TableSchemaBuilder {
      * @param sql 建表 SQL
      * @return 生成的 GenerateBySQLVO
      */
-    public static GenerateBySQLVO buildFromDDL(String sql,String packageName) {
+    public static GenerateBySQLVO buildFromDDL(String sql, String packageName) {
         // 检查传入的 SQL 字符串是否为空或仅包含空白字符
         if (StringUtils.isBlank(sql)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "SQL 语句不能为空");
@@ -52,33 +52,27 @@ public class TableSchemaBuilder {
 
         List<TableSchema> tableSchemas = new ArrayList<>();
         try {
-            // 1
-            // 存储建表语句
+            // 1. 存储建表语句
             List<String> createTableStatements = new ArrayList<>();
 
-            // 分割 SQL 语句为单独的部分
-            int index = 0;
-            while (index < sql.length()) {
-                int createIndex = sql.indexOf("create table", index);
-                if (createIndex == -1) break;
+            // 正则表达式匹配 CREATE TABLE 语句（支持各种大小写组合和 IF NOT EXISTS 子句）
+            Pattern pattern = Pattern.compile("(?i)CREATE\\s+TABLE\\s+IF\\s+NOT\\s+EXISTS\\s*`?\\w+`?\\s*\\((.*?)\\)\\s*(COMMENT\\s*=\\s*'[^']*')?(;|$)", Pattern.DOTALL);
+            Matcher matcher = pattern.matcher(sql);
 
-                int endIndex = sql.indexOf(";", createIndex);
-                if (endIndex == -1) break;
-
-                // 将 SQL 语句分隔到下一个分号位置
-                String createTableStatement = sql.substring(createIndex, endIndex + 1).trim();
+            while (matcher.find()) {
+                // 获取完整的 CREATE TABLE 语句
+                String createTableStatement = matcher.group();
                 createTableStatements.add(createTableStatement);
-
-                // 更新索引以继续查找下一个 create table
-                index = endIndex + 1;
             }
-            // 2
 
-            // 分割 SQL 语句为单独的创建表语句
 
+            // 2. 处理每个 CREATE TABLE 语句
             for (String statement : createTableStatements) {
                 statement = statement.trim();
                 if (StringUtils.isNotBlank(statement)) {
+                    // 移除外键约束
+                    statement = removeForeignKeyConstraints(statement);
+
                     // 创建 MySqlCreateTableParser 对象以解析 SQL 创建表语句
                     MySqlCreateTableParser parser = new MySqlCreateTableParser(statement);
 
@@ -118,7 +112,6 @@ public class TableSchemaBuilder {
                         }
                     }
 
-
                     // 将字段列表设置到 TableSchema 对象中
                     tableSchema.setFieldList(fieldList);
 
@@ -127,13 +120,60 @@ public class TableSchemaBuilder {
                 }
             }
 
-            return GeneratorFacade.generateAllBySQL(tableSchemas,packageName);
+            return GeneratorFacade.generateAllBySQL(tableSchemas, packageName);
         } catch (Exception e) {
             // 记录异常并抛出业务异常
             System.out.println("SQL 解析错误");
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "请确认 SQL 语句正确");
         }
     }
+
+    // 移除外键约束的辅助方法
+    /**
+     * 移除外键约束，并处理外键后的逗号
+     *
+     * @param sql 原始的 SQL 语句
+     * @return 移除外键约束后的 SQL 语句
+     */
+    private static String removeForeignKeyConstraints(String sql) {
+        // 匹配整个 SQL 语句中的外键约束部分，包括外键约束前后的逗号
+        Pattern pattern = Pattern.compile("(?i)(,\\s*FOREIGN\\s+KEY\\s*\\(.*?\\)\\s*REFERENCES\\s*\\w+\\s*\\(.*?\\))", Pattern.DOTALL);
+        Matcher matcher = pattern.matcher(sql);
+
+        StringBuffer sb = new StringBuffer();
+        int lastMatchEnd = 0;
+
+        while (matcher.find()) {
+            // 匹配到的 FOREIGN KEY 约束的起始位置
+            int matchStart = matcher.start();
+            // 匹配到的 FOREIGN KEY 约束的结束位置
+            int matchEnd = matcher.end();
+
+            // 获取 FOREIGN KEY 约束前面的文本
+            String precedingText = sql.substring(lastMatchEnd, matchStart);
+
+            // 检查 FOREIGN KEY 约束前是否有逗号
+            if (precedingText.trim().endsWith(",")) {
+                // 如果有逗号，去掉逗号
+                precedingText = precedingText.trim().substring(0, precedingText.trim().length() - 1);
+            }
+
+            // 将处理后的文本拼接到最终结果中
+            sb.append(precedingText);
+            lastMatchEnd = matchEnd;
+        }
+
+        // 添加最后一个匹配结束后剩余的部分
+        sb.append(sql.substring(lastMatchEnd));
+
+        // 去掉多余的空白字符
+        return sb.toString().trim();
+    }
+
+
+
+
+
 
     private static String getExtractComment(String comment) {
         // 定义正则表达式

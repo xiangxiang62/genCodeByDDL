@@ -4,10 +4,12 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.WriteCommandAction;
+import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileManager;
 import main.java.com.xiangxiang.genCodeByDDL.builder.TableSchemaBuilder;
 import main.java.com.xiangxiang.genCodeByDDL.model.GenerateBySQLVO;
 import org.jetbrains.annotations.NotNull;
@@ -16,6 +18,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashMap;
@@ -42,8 +45,11 @@ public class GenCodeByDDLAction extends AnAction {
         VirtualFile file = event.getDataContext().getData(com.intellij.openapi.actionSystem.CommonDataKeys.VIRTUAL_FILE);
         if (file != null && "sql".equals(file.getExtension())) {
             try {
+                // 刷新虚拟文件系统，确保获取最新文件状态
+                VirtualFileManager.getInstance().refreshWithoutFileWatcher(false);
+
                 // 刷新文件内容，确保读取的是最新内容
-                file.refresh(false, false);
+                FileDocumentManager.getInstance().saveDocument(FileDocumentManager.getInstance().getDocument(file));
 
                 // 弹出对话框让用户选择生成的代码类型
                 CodeGenerationDialog dialog = new CodeGenerationDialog(project);
@@ -55,16 +61,14 @@ public class GenCodeByDDLAction extends AnAction {
                     Map<String, Boolean> selectedOptions = dialog.getSelectedOptions();
                     System.out.println(packageName + "包名");
 
-
-
-
-
-
                     // 读取 SQL 文件内容
-                    String fileContent = new String(file.contentsToByteArray(), StandardCharsets.UTF_8);
+                    String fileContent;
+                    try (InputStream inputStream = file.getInputStream()) {
+                        fileContent = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+                    }
 
                     // 根据 SQL 文件内容生成 Java 代码
-                    GenerateBySQLVO generateBySQLVO = TableSchemaBuilder.buildFromDDL(fileContent,packageName);
+                    GenerateBySQLVO generateBySQLVO = TableSchemaBuilder.buildFromDDL(fileContent, packageName);
                     // 获取控制层代码
                     List<String> javaControllerCode = generateBySQLVO.getJavaControllerCode();
                     // 获取 Service 层代码
@@ -87,21 +91,11 @@ public class GenCodeByDDLAction extends AnAction {
                     List<String> javaMapperCode = generateBySQLVO.getJavaMapperCode();
                     // 获取 mapperXml 代码
                     List<String> mapperXmlCode = generateBySQLVO.getMapperXmlCode();
-                    // 获取 mapperXml 代码
+                    // 获取跨域配置代码
                     List<String> corsConfigCode = generateBySQLVO.getJavaCorsConfigCode();
 
                     // 获取 README.md 文件
                     String README = generateBySQLVO.getREADME();
-
-
-
-
-
-
-
-
-
-
 
                     // 执行写操作的代码
                     WriteCommandAction.runWriteCommandAction(project, () -> {
@@ -145,7 +139,7 @@ public class GenCodeByDDLAction extends AnAction {
                             if (selectedOptions.getOrDefault("dto", false)) {
                                 createDTOFiles(javaUpdateEntityCode, generatorDir);
                             }
-                            // 生成插件自述 readme.md 文件
+                            // 生成插件自述 README.md 文件
                             if (selectedOptions.getOrDefault("readme", false)) {
                                 createREADMEFile(Collections.singletonList(README), projectRoot);
                             }
