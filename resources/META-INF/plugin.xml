@@ -6,7 +6,8 @@
   <!-- 插件的版本 -->
   <version>1.0</version>
   <!-- 插件的供应商信息 -->
-  <vendor email="1964362087@qq.com" url="#">个人开发者</vendor>
+  <vendor email="1964362087@qq.com" url="#">香香</vendor>
+
 
   <!-- 插件的描述信息，可以使用 HTML 标签 -->
   <description><![CDATA[
@@ -42,8 +43,10 @@
             description="这是一个可以根据 DDL 自动生成 Java Model、Controller / Service(ServiceImpl) / Mapper / plantUML...代码的插件，可以极大程度简化开发难度，提升开发效率。"
             icon="/icons/genicon.png"
     >
-      <!-- 绑定到特定的上下文菜单 -->
+      <!-- 绑定到编辑器右键菜单 -->
       <add-to-group group-id="EditorPopupMenu" anchor="first"/>
+      <!-- 绑定到项目工具窗口右键菜单 -->
+      <add-to-group group-id="ProjectViewPopupMenu" anchor="first"/>
       <!-- 指定动作的快捷方式 -->
       <keyboard-shortcut keymap="$default" first-keystroke="ctrl shift Z"/>
     </action>

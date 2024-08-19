@@ -1,5 +1,6 @@
 package main.java.com.xiangxiang.genCodeByDDL.generate;
 
+import main.java.com.xiangxiang.genCodeByDDL.builder.config.JavaConfigBuilder;
 import main.java.com.xiangxiang.genCodeByDDL.builder.controller.JavaControllerBuilder;
 import main.java.com.xiangxiang.genCodeByDDL.builder.dto.JavaAddRequestBuilder;
 import main.java.com.xiangxiang.genCodeByDDL.builder.dto.JavaEditRequestBuilder;
@@ -49,6 +50,7 @@ public class GeneratorFacade {
         List<String> mapperXmlCode = MapperXmlBuilder.buildMapperXmlCode(tableSchemas);
         List<String> javaServiceCode = JavaServiceBuilder.buildJavaServiceCode(tableSchemas);
         List<String> javaServiceImplCode = JavaServiceImplBuilder.buildJavaServiceImplCode(tableSchemas);
+        List<String> javaCorsConfigCode = JavaConfigBuilder.buildJavaCorsConfigCode(tableSchemas);
         String pluginsREADME = pluginsREADMEBuilder.buildREADME();
         // 生成控制层代码
         List<String> javaControllerCode = JavaControllerBuilder.buildJavaControllerCode(tableSchemas);
@@ -72,6 +74,7 @@ public class GeneratorFacade {
         generateBySQLVO.setMapperXmlCode(mapperXmlCode);
         generateBySQLVO.setJavaServiceCode(javaServiceCode);
         generateBySQLVO.setJavaServiceImplCode(javaServiceImplCode);
+        generateBySQLVO.setJavaCorsConfigCode(javaCorsConfigCode);
         // 封装返回
         return  generateBySQLVO;
     }

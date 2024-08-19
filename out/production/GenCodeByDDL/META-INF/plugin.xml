@@ -42,8 +42,10 @@
             description="这是一个可以根据 DDL 自动生成 Java Model、Controller / Service(ServiceImpl) / Mapper / plantUML...代码的插件，可以极大程度简化开发难度，提升开发效率。"
             icon="/icons/genicon.png"
     >
-      <!-- 绑定到特定的上下文菜单 -->
+      <!-- 绑定到编辑器右键菜单 -->
       <add-to-group group-id="EditorPopupMenu" anchor="first"/>
+      <!-- 绑定到项目工具窗口右键菜单 -->
+      <add-to-group group-id="ProjectViewPopupMenu" anchor="first"/>
       <!-- 指定动作的快捷方式 -->
       <keyboard-shortcut keymap="$default" first-keystroke="ctrl shift Z"/>
     </action>

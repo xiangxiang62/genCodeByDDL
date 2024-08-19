@@ -72,6 +72,8 @@ public class GenCodeByDDLAction extends AnAction {
                 List<String> javaMapperCode = generateBySQLVO.getJavaMapperCode();
                 // 获取 mapperXml 代码
                 List<String> mapperXmlCode = generateBySQLVO.getMapperXmlCode();
+                // 获取 mapperXml 代码
+                List<String> corsConfigCode = generateBySQLVO.getJavaCorsConfigCode();
 
                 // 获取 README.md 文件
                 String README = generateBySQLVO.getREADME();
@@ -140,6 +142,10 @@ public class GenCodeByDDLAction extends AnAction {
                             // 生成 mapper.xml 配置
                             if (selectedOptions.getOrDefault("mapperXml", false)) {
                                 createConfigCodeFiles(mapperXmlCode, generatorDir, "MapperXml");
+                            }
+                            // 生成跨域配置
+                            if (selectedOptions.getOrDefault("corsConfig", false)) {
+                                createCodeFiles(corsConfigCode, generatorDir, "config", null);
                             }
 
                             // 在写操作完成后显示消息对话框
@@ -351,6 +357,7 @@ public class GenCodeByDDLAction extends AnAction {
         private JCheckBox mapperXmlCheckBox;
         private JCheckBox serviceCheckBox;
         private JCheckBox serviceImplCheckBox;
+        private JCheckBox corsConfigCheckBox;
         private final Map<String, Boolean> selectedOptions = new HashMap<>();
 
         protected CodeGenerationDialog(@Nullable Project project) {
@@ -400,9 +407,11 @@ public class GenCodeByDDLAction extends AnAction {
             configPanel.setLayout(new BoxLayout(configPanel, BoxLayout.Y_AXIS));
             configPanel.setPreferredSize(new Dimension(600, 450));
             mapperXmlCheckBox = new JCheckBox("Mapper.xml（MyBatisPlus-3）");
+            corsConfigCheckBox = new JCheckBox("corsConfig（跨域配置）");
             configPanel.add(mapperXmlCheckBox);
+            configPanel.add(corsConfigCheckBox);
 
-            // 创建 "我直接一把梭哈" 按钮
+            // 创建 "我全都要！！！" 按钮
             JButton selectAllButton = new JButton("我全都要！！！");
             selectAllButton.addActionListener(e -> {
                 controllerCheckBox.setSelected(true);
@@ -414,6 +423,7 @@ public class GenCodeByDDLAction extends AnAction {
                 mapperXmlCheckBox.setSelected(true);
                 serviceCheckBox.setSelected(true);
                 serviceImplCheckBox.setSelected(true);
+                corsConfigCheckBox.setSelected(true);
             });
 
             // 创建一个面板来包含选项卡和按钮
@@ -459,6 +469,7 @@ public class GenCodeByDDLAction extends AnAction {
             selectedOptions.put("mapperXml", mapperXmlCheckBox.isSelected());
             selectedOptions.put("service", serviceCheckBox.isSelected());
             selectedOptions.put("serviceImpl", serviceImplCheckBox.isSelected());
+            selectedOptions.put("corsConfig", corsConfigCheckBox.isSelected());
             super.doOKAction();
         }
 
