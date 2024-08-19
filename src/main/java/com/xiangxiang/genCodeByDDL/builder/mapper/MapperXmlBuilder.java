@@ -58,7 +58,7 @@ public class MapperXmlBuilder {
      * @param tableSchemas 表概要
      * @return 生成的 java 代码
      */
-    public static List<String> buildMapperXmlCode(List<TableSchema> tableSchemas) {
+    public static List<String> buildMapperXmlCode(List<TableSchema> tableSchemas,String packageName) {
         List<String> javaEntityCodeList = new ArrayList<>();
         for (TableSchema tableSchema : tableSchemas) {
             String tableName = tableSchema.getTableName();
@@ -94,6 +94,7 @@ public class MapperXmlBuilder {
 
             // 填充模板
             MapperXmlGenerateDTO mapperXmlGenerateDTO = new MapperXmlGenerateDTO()
+                    .setPackageName(packageName)
                     .setCaseTableName(upperCamelTableName)
                     .setClassComment(tableComment)
                     .setFieldList(fieldDTOList);

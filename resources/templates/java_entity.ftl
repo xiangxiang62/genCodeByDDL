@@ -1,4 +1,4 @@
-<#-- Java 实体模板 -->
+package ${packageName}.model.${className};
 import lombok.Data;
 
 /**

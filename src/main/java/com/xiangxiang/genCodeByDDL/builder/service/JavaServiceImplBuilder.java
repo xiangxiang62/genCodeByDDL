@@ -64,7 +64,7 @@ public class JavaServiceImplBuilder {
      * @return 生成的代码
      */
     @SneakyThrows
-    public static List<String> buildJavaServiceImplCode(List<TableSchema> tableSchemas) {
+    public static List<String> buildJavaServiceImplCode(List<TableSchema> tableSchemas,String packageName) {
         List<String> crud = new ArrayList<>();
         for (TableSchema tableSchema : tableSchemas) {
             String tableComment = tableSchema.getTableComment();
@@ -83,6 +83,7 @@ public class JavaServiceImplBuilder {
 
             // 传递参数
             JavaServiceImplGenerateDTO generateDTO = new JavaServiceImplGenerateDTO()
+                    .setPackageName(packageName)
                     .setClassName(upperCamelTableName) // 类名为大写的表名
                     .setClassComment(Optional.ofNullable(tableComment).orElse(upperCamelTableName))
                     .setCaseTableName(upperCamelTableName)

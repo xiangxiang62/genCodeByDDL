@@ -56,7 +56,7 @@ public class JavaEditRequestBuilder {
      * @param tableSchemas 表概要
      * @return 生成的 java 代码
      */
-    public static List<String> buildJavaEditEntityCode(List<TableSchema> tableSchemas) {
+    public static List<String> buildJavaEditEntityCode(List<TableSchema> tableSchemas,String packageName) {
         List<String> javaEntityCodeList = new ArrayList<>();
         for (TableSchema tableSchema : tableSchemas) {
             String tableName = tableSchema.getTableName();
@@ -74,6 +74,7 @@ public class JavaEditRequestBuilder {
             });
             // 传递参数
             JavaEditEntityGenerateDTO javaEditEntityGenerateDTO = new JavaEditEntityGenerateDTO()
+                    .setPackageName(packageName)
                     .setClassName(upperCamelTableName) // 类名为大写的表名
                     .setClassComment(Optional.ofNullable(tableComment).orElse(upperCamelTableName))
                     .setCaseTableName(upperCamelTableName)

@@ -45,45 +45,63 @@ public class GenCodeByDDLAction extends AnAction {
                 // 刷新文件内容，确保读取的是最新内容
                 file.refresh(false, false);
 
-                // 读取 SQL 文件内容
-                String fileContent = new String(file.contentsToByteArray(), StandardCharsets.UTF_8);
-
-                // 根据 SQL 文件内容生成 Java 代码
-                GenerateBySQLVO generateBySQLVO = TableSchemaBuilder.buildFromDDL(fileContent);
-                // 获取控制层代码
-                List<String> javaControllerCode = generateBySQLVO.getJavaControllerCode();
-                // 获取 Service 层代码
-                List<String> javaServiceCode = generateBySQLVO.getJavaServiceCode();
-                // 获取 ServiceImpl 层代码
-                List<String> javaServiceImplCode = generateBySQLVO.getJavaServiceImplCode();
-                // 获取新增 DTO 代码
-                List<String> javaAddEntityCode = generateBySQLVO.getJavaAddEntityCode();
-                // 获取编辑 DTO 代码
-                List<String> javaEditEntityCode = generateBySQLVO.getJavaEditEntityCode();
-                // 获取查询 DTO 代码
-                List<String> javaQueryEntityCode = generateBySQLVO.getJavaQueryEntityCode();
-                // 获取更新 DTO 代码
-                List<String> javaUpdateEntityCode = generateBySQLVO.getJavaUpdateEntityCode();
-                // 获取实体类代码
-                List<String> javaEntityCodeList = generateBySQLVO.getJavaEntityCode();
-                // 获取视图类代码
-                List<String> javaEntityVOCodeList = generateBySQLVO.getJavaEntityVOCode();
-                // 获取持久层代码
-                List<String> javaMapperCode = generateBySQLVO.getJavaMapperCode();
-                // 获取 mapperXml 代码
-                List<String> mapperXmlCode = generateBySQLVO.getMapperXmlCode();
-                // 获取 mapperXml 代码
-                List<String> corsConfigCode = generateBySQLVO.getJavaCorsConfigCode();
-
-                // 获取 README.md 文件
-                String README = generateBySQLVO.getREADME();
-
                 // 弹出对话框让用户选择生成的代码类型
                 CodeGenerationDialog dialog = new CodeGenerationDialog(project);
                 dialog.show();
                 if (dialog.isOK()) {
+                    // packageName
+                    String packageName = dialog.getPackageName();
                     // 获取用户选择的代码类型
                     Map<String, Boolean> selectedOptions = dialog.getSelectedOptions();
+                    System.out.println(packageName + "包名");
+
+
+
+
+
+
+                    // 读取 SQL 文件内容
+                    String fileContent = new String(file.contentsToByteArray(), StandardCharsets.UTF_8);
+
+                    // 根据 SQL 文件内容生成 Java 代码
+                    GenerateBySQLVO generateBySQLVO = TableSchemaBuilder.buildFromDDL(fileContent,packageName);
+                    // 获取控制层代码
+                    List<String> javaControllerCode = generateBySQLVO.getJavaControllerCode();
+                    // 获取 Service 层代码
+                    List<String> javaServiceCode = generateBySQLVO.getJavaServiceCode();
+                    // 获取 ServiceImpl 层代码
+                    List<String> javaServiceImplCode = generateBySQLVO.getJavaServiceImplCode();
+                    // 获取新增 DTO 代码
+                    List<String> javaAddEntityCode = generateBySQLVO.getJavaAddEntityCode();
+                    // 获取编辑 DTO 代码
+                    List<String> javaEditEntityCode = generateBySQLVO.getJavaEditEntityCode();
+                    // 获取查询 DTO 代码
+                    List<String> javaQueryEntityCode = generateBySQLVO.getJavaQueryEntityCode();
+                    // 获取更新 DTO 代码
+                    List<String> javaUpdateEntityCode = generateBySQLVO.getJavaUpdateEntityCode();
+                    // 获取实体类代码
+                    List<String> javaEntityCodeList = generateBySQLVO.getJavaEntityCode();
+                    // 获取视图类代码
+                    List<String> javaEntityVOCodeList = generateBySQLVO.getJavaEntityVOCode();
+                    // 获取持久层代码
+                    List<String> javaMapperCode = generateBySQLVO.getJavaMapperCode();
+                    // 获取 mapperXml 代码
+                    List<String> mapperXmlCode = generateBySQLVO.getMapperXmlCode();
+                    // 获取 mapperXml 代码
+                    List<String> corsConfigCode = generateBySQLVO.getJavaCorsConfigCode();
+
+                    // 获取 README.md 文件
+                    String README = generateBySQLVO.getREADME();
+
+
+
+
+
+
+
+
+
+
 
                     // 执行写操作的代码
                     WriteCommandAction.runWriteCommandAction(project, () -> {
@@ -358,6 +376,7 @@ public class GenCodeByDDLAction extends AnAction {
         private JCheckBox serviceCheckBox;
         private JCheckBox serviceImplCheckBox;
         private JCheckBox corsConfigCheckBox;
+        private JTextField packageNameField;
         private final Map<String, Boolean> selectedOptions = new HashMap<>();
 
         protected CodeGenerationDialog(@Nullable Project project) {
@@ -370,6 +389,20 @@ public class GenCodeByDDLAction extends AnAction {
         protected JComponent createCenterPanel() {
             // 创建选项卡面板
             JTabbedPane tabbedPane = new JTabbedPane();
+
+            // 创建输入框和提示图标的面板
+            JPanel inputPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+            JLabel packageNameLabel = new JLabel("添加包名：");
+            packageNameField = new JTextField(20);
+
+            // 创建提示图标和气泡提示
+            JLabel helpIcon = new JLabel("❓");
+            helpIcon.setToolTipText("若不填写包名，默认为 GenCodeByDDL");
+            helpIcon.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+            inputPanel.add(packageNameLabel);
+            inputPanel.add(packageNameField);
+            inputPanel.add(helpIcon);
 
             // 创建 Controller 选项卡面板
             JPanel controllerPanel = new JPanel();
@@ -426,8 +459,9 @@ public class GenCodeByDDLAction extends AnAction {
                 corsConfigCheckBox.setSelected(true);
             });
 
-            // 创建一个面板来包含选项卡和按钮
+            // 创建一个面板来包含输入框、选项卡和按钮
             JPanel mainPanel = new JPanel(new BorderLayout());
+            mainPanel.add(inputPanel, BorderLayout.NORTH);
             mainPanel.add(tabbedPane, BorderLayout.CENTER);
             mainPanel.add(selectAllButton, BorderLayout.SOUTH);
 
@@ -476,5 +510,11 @@ public class GenCodeByDDLAction extends AnAction {
         public Map<String, Boolean> getSelectedOptions() {
             return selectedOptions;
         }
+
+        public String getPackageName() {
+            String packageName = packageNameField.getText();
+            return packageName.isEmpty() ? "GenCodeByDDL" : packageName;
+        }
     }
+
 }

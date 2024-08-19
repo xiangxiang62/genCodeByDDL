@@ -28,7 +28,7 @@ public class GeneratorFacade {
     }
 
 
-    public static GenerateBySQLVO generateAllBySQL(List<TableSchema> tableSchemas) {
+    public static GenerateBySQLVO generateAllBySQL(List<TableSchema> tableSchemas,String packageName) {
         // 校验
 //        validSchema(tableSchemas);
         System.out.println("开始构建数据");
@@ -40,26 +40,32 @@ public class GeneratorFacade {
 //        String dataJson = JsonBuilder.buildJson(dataList);
         // 生成 java 实体代码
         // 生成 java 请求实体代码
-        List<String> javaAddEntityCode = JavaAddRequestBuilder.buildJavaAddEntityCode(tableSchemas);
-        List<String> javaEditEntityCode = JavaEditRequestBuilder.buildJavaEditEntityCode(tableSchemas);
-        List<String> javaQueryEntityCode = JavaQueryRequestBuilder.buildJavaQueryEntityCode(tableSchemas);
-        List<String> javaUpdateEntityCode = JavaUpdateRequestBuilder.buildJavaUpdateEntityCode(tableSchemas);
-        List<String> javaEntityCode = JavaEntityCodeBuilder.buildJavaEntityCode(tableSchemas);
-        List<String> javaEntityVOCode = JavaEntityVOBuilder.buildJavaEntityVOCode(tableSchemas);
-        List<String> javaMapperCode = JavaMapperBuilder.buildJavaMapperCode(tableSchemas);
-        List<String> mapperXmlCode = MapperXmlBuilder.buildMapperXmlCode(tableSchemas);
-        List<String> javaServiceCode = JavaServiceBuilder.buildJavaServiceCode(tableSchemas);
-        List<String> javaServiceImplCode = JavaServiceImplBuilder.buildJavaServiceImplCode(tableSchemas);
-        List<String> javaCorsConfigCode = JavaConfigBuilder.buildJavaCorsConfigCode(tableSchemas);
+        List<String> javaAddEntityCode = JavaAddRequestBuilder.buildJavaAddEntityCode(tableSchemas,packageName);
+
+        List<String> javaEditEntityCode = JavaEditRequestBuilder.buildJavaEditEntityCode(tableSchemas,packageName);
+
+        List<String> javaQueryEntityCode = JavaQueryRequestBuilder.buildJavaQueryEntityCode(tableSchemas,packageName);
+
+        List<String> javaUpdateEntityCode = JavaUpdateRequestBuilder.buildJavaUpdateEntityCode(tableSchemas,packageName);
+
+        List<String> javaEntityCode = JavaEntityCodeBuilder.buildJavaEntityCode(tableSchemas,packageName);
+
+        List<String> javaEntityVOCode = JavaEntityVOBuilder.buildJavaEntityVOCode(tableSchemas,packageName);
+
+        List<String> javaMapperCode = JavaMapperBuilder.buildJavaMapperCode(tableSchemas,packageName);
+
+        List<String> mapperXmlCode = MapperXmlBuilder.buildMapperXmlCode(tableSchemas,packageName);
+
+        List<String> javaServiceCode = JavaServiceBuilder.buildJavaServiceCode(tableSchemas,packageName);
+
+        List<String> javaServiceImplCode = JavaServiceImplBuilder.buildJavaServiceImplCode(tableSchemas,packageName);
+
+        List<String> javaCorsConfigCode = JavaConfigBuilder.buildJavaCorsConfigCode(tableSchemas,packageName);
+
         String pluginsREADME = pluginsREADMEBuilder.buildREADME();
         // 生成控制层代码
-        List<String> javaControllerCode = JavaControllerBuilder.buildJavaControllerCode(tableSchemas);
-//        // 生成 java 对象代码
-//        String javaObjectCode = JavaCodeBuilder.buildJavaObjectCode(tableSchema, dataList);
-//        // 生成 typescript 类型代码
-//        List<String> typescriptTypeCode = TypeScriptBuilder.buildTypeScriptTypeCode(tableSchemas);
-        // 生成 plantuml 类型代码
-//        String plantUmlCode = PlantUmlBuilder.buildPlantUmlCode(tableSchemas);
+        List<String> javaControllerCode = JavaControllerBuilder.buildJavaControllerCode(tableSchemas,packageName);
+
         System.out.println("建数据结束");
         GenerateBySQLVO generateBySQLVO = new GenerateBySQLVO();
         generateBySQLVO.setJavaEntityCode(javaEntityCode);

@@ -56,7 +56,7 @@ public class JavaEntityCodeBuilder {
      * @param tableSchemas 表概要
      * @return 生成的 java 代码
      */
-    public static List<String> buildJavaEntityCode(List<TableSchema> tableSchemas) {
+    public static List<String> buildJavaEntityCode(List<TableSchema> tableSchemas,String packageName) {
         List<String> javaEntityCodeList = new ArrayList<>();
         for (TableSchema tableSchema : tableSchemas) {
             String tableName = tableSchema.getTableName();
@@ -83,6 +83,7 @@ public class JavaEntityCodeBuilder {
 
             // 填充模板
             JavaEntityGenerateDTO javaEntityGenerateDTO = new JavaEntityGenerateDTO()
+                    .setPackageName(packageName)
                     .setClassName(upperCamelTableName)
                     .setClassComment(tableComment)
                     .setFieldList(fieldDTOList);

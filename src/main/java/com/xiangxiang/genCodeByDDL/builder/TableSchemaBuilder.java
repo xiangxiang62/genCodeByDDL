@@ -44,7 +44,7 @@ public class TableSchemaBuilder {
      * @param sql 建表 SQL
      * @return 生成的 GenerateBySQLVO
      */
-    public static GenerateBySQLVO buildFromDDL(String sql) {
+    public static GenerateBySQLVO buildFromDDL(String sql,String packageName) {
         // 检查传入的 SQL 字符串是否为空或仅包含空白字符
         if (StringUtils.isBlank(sql)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "SQL 语句不能为空");
@@ -127,7 +127,7 @@ public class TableSchemaBuilder {
                 }
             }
 
-            return GeneratorFacade.generateAllBySQL(tableSchemas);
+            return GeneratorFacade.generateAllBySQL(tableSchemas,packageName);
         } catch (Exception e) {
             // 记录异常并抛出业务异常
             System.out.println("SQL 解析错误");

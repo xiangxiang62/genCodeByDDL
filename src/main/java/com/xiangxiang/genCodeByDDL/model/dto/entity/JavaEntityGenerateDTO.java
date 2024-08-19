@@ -15,6 +15,8 @@ import java.util.List;
 @Accessors(chain = true)
 public class JavaEntityGenerateDTO {
 
+    private String packageName;
+
     /**
      * 类名
      */
