@@ -55,15 +55,21 @@ public class TableSchemaBuilder {
             // 1. 存储建表语句
             List<String> createTableStatements = new ArrayList<>();
 
-            // 正则表达式匹配 CREATE TABLE 语句（支持各种大小写组合和 IF NOT EXISTS 子句）
-            Pattern pattern = Pattern.compile("(?i)CREATE\\s+TABLE\\s*(IF\\s+NOT\\s+EXISTS\\s*)?`?\\w+`?\\s*\\((.*?)\\)\\s*(ENGINE\\s*=\\s*\\w+)?\\s*(DEFAULT\\s+CHARSET\\s*=\\s*\\w+)?\\s*(COMMENT\\s*=\\s*'[^']*')?(;|$)", Pattern.DOTALL);
+            Pattern pattern = Pattern.compile(
+                    "(?i)CREATE\\s+TABLE\\s+(IF\\s+NOT\\s+EXISTS\\s+)?`?\\w+`?\\s*\\(" +
+                            "(?:[^()]*|\\([^()]*\\))*" +
+                            "\\)\\s*(?:COMMENT\\s+'[^']*')?(?:\\s*COLLATE\\s*=\\s*\\w+)?(?:\\s*;)?",
+                    Pattern.DOTALL | Pattern.CASE_INSENSITIVE
+            );
+
             Matcher matcher = pattern.matcher(sql);
 
             while (matcher.find()) {
                 // 获取完整的 CREATE TABLE 语句
-                String createTableStatement = matcher.group();
+                String createTableStatement = matcher.group().trim();
                 createTableStatements.add(createTableStatement);
             }
+
 
 
             // 2. 处理每个 CREATE TABLE 语句
@@ -137,7 +143,7 @@ public class TableSchemaBuilder {
      */
     private static String removeForeignKeyConstraints(String sql) {
         // 匹配外键约束部分
-        Pattern pattern = Pattern.compile("(?i),\\s*FOREIGN\\s+KEY\\s*\\(.*?\\)\\s*REFERENCES\\s*\\w+\\s*\\(.*?\\)(?:\\s*COMMENT\\s*'.*?')?", Pattern.DOTALL);
+        Pattern pattern = Pattern.compile("(?i)\\s*,\\s*FOREIGN\\s+KEY\\s*\\(.*?\\)\\s*REFERENCES\\s*\\w+\\s*\\(.*?\\)(?:\\s*(?:ON DELETE|ON UPDATE|MATCH|DEFERRABLE|NOT DEFERRABLE|COMMENT)\\s*.*)?", Pattern.DOTALL);
         Matcher matcher = pattern.matcher(sql);
 
         StringBuffer sb = new StringBuffer();
@@ -163,15 +169,10 @@ public class TableSchemaBuilder {
             lastMatchEnd = matchEnd;
         }
 
-        // 添加最后一个匹配结束后剩余的部分
+        // 追加最后一部分文本，确保包括剩余的部分（如 COMMENT 等）
         sb.append(sql.substring(lastMatchEnd));
-
-        // 去掉多余的空白字符
-        return sb.toString().trim();
+        return sb.toString();
     }
-
-
-
 
 
 
