@@ -82,6 +82,11 @@ public class GenerateBySQLVO {
     private List<String> javaServiceCode;
 
     /**
+     * ServiceImpl 类型代码
+     */
+    private List<String> javaServiceImplCode;
+
+    /**
      * PlantUML 类型代码
      */
     private String plantUmlCode;
@@ -95,9 +100,10 @@ public class GenerateBySQLVO {
                            List<String> javaEntityCode, List<String> javaAddEntityCode,
                            List<String> javaEditEntityCode, List<String> javaObjectCode,
                            List<String> javaQueryEntityCode, List<String> javaUpdateEntityCode,
-                           List<String> javaControllerCode,List<String> javaEntityVOCode,
-                           String plantUmlCode,List<String> javaMapperCode,
-                            List<String> mapperXmlCode,List<String> javaServiceCode) {
+                           List<String> javaControllerCode, List<String> javaEntityVOCode,
+                           String plantUmlCode, List<String> javaMapperCode,
+                           List<String> mapperXmlCode, List<String> javaServiceCode,
+                           List<String> javaServiceImplCode) {
         this.README = README;
         this.dataList = dataList;
         this.dataJson = dataJson;
@@ -113,6 +119,15 @@ public class GenerateBySQLVO {
         this.javaMapperCode = javaMapperCode;
         this.mapperXmlCode = mapperXmlCode;
         this.javaServiceCode = javaServiceCode;
+        this.javaServiceImplCode = javaServiceImplCode;
+    }
+
+    public List<String> getJavaServiceImplCode() {
+        return javaServiceImplCode;
+    }
+
+    public void setJavaServiceImplCode(List<String> javaServiceImplCode) {
+        this.javaServiceImplCode = javaServiceImplCode;
     }
 
     public List<String> getJavaServiceCode() {
