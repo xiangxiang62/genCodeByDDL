@@ -1,7 +1,7 @@
 package ${packageName}.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import cn.dev33.satoken.annotation.SaCheckRole;
+import ${packageName}.annotation.AuthCheck;
 import ${packageName}.common.BaseResponse;
 import ${packageName}.common.DeleteRequest;
 import ${packageName}.common.ErrorCode;
@@ -22,18 +22,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.annotation.Resource;
-import jakarta.servlet.http.HttpServletRequest;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * ${classComment}接口
- *
- * @author GenCodeByDDLPlugins
  */
 @RestController
 @RequestMapping("/${tableName}")
 @Slf4j
-@Tag(name = "${classComment}接口")
 public class ${caseTableName}Controller {
 
     @Resource
@@ -47,12 +44,12 @@ public class ${caseTableName}Controller {
     /**
      * 创建${classComment}
      *
-     * @param ${tableName}AddRequest 创建${classComment}请求
-     * @return {@link BaseResponse }<{@link Long }>
+     * @param ${tableName}AddRequest
+     * @param request
+     * @return
      */
     @PostMapping("/add")
-    @Operation(summary = "创建${classComment}")
-    public BaseResponse<Long> add${caseTableName}(@RequestBody ${caseTableName}AddRequest ${tableName}AddRequest) {
+    public BaseResponse<Long> add${caseTableName}(@RequestBody ${caseTableName}AddRequest ${tableName}AddRequest, HttpServletRequest request) {
         ThrowUtils.throwIf(${tableName}AddRequest == null, ErrorCode.PARAMS_ERROR);
         // todo 在此处将实体类和 DTO 进行转换
         ${caseTableName} ${tableName} = new ${caseTableName}();
@@ -60,7 +57,7 @@ public class ${caseTableName}Controller {
         // 数据校验
         ${tableName}Service.valid${caseTableName}(${tableName}, true);
         // todo 填充默认值
-        User loginUser = userService.getLoginUser();
+        User loginUser = userService.getLoginUser(request);
         ${tableName}.setUserId(loginUser.getId());
         // 写入数据库
         boolean result = ${tableName}Service.save(${tableName});
@@ -73,22 +70,22 @@ public class ${caseTableName}Controller {
     /**
      * 删除${classComment}
      *
-     * @param deleteRequest 删除${classComment}请求
-     * @return {@link BaseResponse }<{@link Boolean }>
+     * @param deleteRequest
+     * @param request
+     * @return
      */
     @PostMapping("/delete")
-    @Operation(summary = "删除${classComment}")
-    public BaseResponse<Boolean> delete${caseTableName}(@RequestBody DeleteRequest deleteRequest) {
+    public BaseResponse<Boolean> delete${caseTableName}(@RequestBody DeleteRequest deleteRequest, HttpServletRequest request) {
         if (deleteRequest == null || deleteRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        User user = userService.getLoginUser();
+        User user = userService.getLoginUser(request);
         long id = deleteRequest.getId();
         // 判断是否存在
         ${caseTableName} old${caseTableName} = ${tableName}Service.getById(id);
         ThrowUtils.throwIf(old${caseTableName} == null, ErrorCode.NOT_FOUND_ERROR);
         // 仅本人或管理员可删除
-        if (!old${caseTableName}.getId().equals(user.getId()) && !userService.isAdmin()) {
+        if (!old${caseTableName}.getUserId().equals(user.getId()) && !userService.isAdmin(request)) {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
         }
         // 操作数据库
@@ -100,12 +97,11 @@ public class ${caseTableName}Controller {
     /**
      * 更新${classComment}（仅管理员可用）
      *
-     * @param ${tableName}UpdateRequest 更新${classComment}请求
-     * @return {@link BaseResponse }<{@link Boolean }>
+     * @param ${tableName}UpdateRequest
+     * @return
      */
     @PostMapping("/update")
-    @Operation(summary = "更新${classComment}（仅管理员可用）")
-    @SaCheckRole(UserConstant.ADMIN_ROLE)
+    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Boolean> update${caseTableName}(@RequestBody ${caseTableName}UpdateRequest ${tableName}UpdateRequest) {
         if (${tableName}UpdateRequest == null || ${tableName}UpdateRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
@@ -128,29 +124,27 @@ public class ${caseTableName}Controller {
     /**
      * 根据 id 获取${classComment}（封装类）
      *
-     * @param id ${classComment} id
-     * @return {@link BaseResponse }<{@link ${caseTableName}VO }>
+     * @param id
+     * @return
      */
     @GetMapping("/get/vo")
-    @Operation(summary = "根据 id 获取${classComment}（封装类）")
-    public BaseResponse<${caseTableName}VO> get${caseTableName}VOById(long id) {
+    public BaseResponse<${caseTableName}VO> get${caseTableName}VOById(long id, HttpServletRequest request) {
         ThrowUtils.throwIf(id <= 0, ErrorCode.PARAMS_ERROR);
         // 查询数据库
         ${caseTableName} ${tableName} = ${tableName}Service.getById(id);
         ThrowUtils.throwIf(${tableName} == null, ErrorCode.NOT_FOUND_ERROR);
         // 获取封装类
-        return ResultUtils.success(${tableName}Service.get${caseTableName}VO(${tableName}));
+        return ResultUtils.success(${tableName}Service.get${caseTableName}VO(${tableName}, request));
     }
 
     /**
      * 分页获取${classComment}列表（仅管理员可用）
      *
-     * @param ${tableName}QueryRequest 分页获取${classComment}列表请求
-     * @return {@link BaseResponse }<{@link Page }<{@link ${caseTableName} }>>
+     * @param ${tableName}QueryRequest
+     * @return
      */
     @PostMapping("/list/page")
-    @SaCheckRole(UserConstant.ADMIN_ROLE)
-    @Operation(summary = "分页获取${classComment}列表（仅管理员可用）")
+    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Page<${caseTableName}>> list${caseTableName}ByPage(@RequestBody ${caseTableName}QueryRequest ${tableName}QueryRequest) {
         long current = ${tableName}QueryRequest.getCurrent();
         long size = ${tableName}QueryRequest.getPageSize();
@@ -163,12 +157,13 @@ public class ${caseTableName}Controller {
     /**
      * 分页获取${classComment}列表（封装类）
      *
-     * @param ${tableName}QueryRequest 分页获取${classComment}列表请求
-     * @return {@link BaseResponse }<{@link Page }<{@link ${caseTableName}VO }>>
+     * @param ${tableName}QueryRequest
+     * @param request
+     * @return
      */
     @PostMapping("/list/page/vo")
-    @Operation(summary = "分页获取${classComment}列表（封装类）")
-    public BaseResponse<Page<${caseTableName}VO>> list${caseTableName}VOByPage(@RequestBody ${caseTableName}QueryRequest ${tableName}QueryRequest) {
+    public BaseResponse<Page<${caseTableName}VO>> list${caseTableName}VOByPage(@RequestBody ${caseTableName}QueryRequest ${tableName}QueryRequest,
+                                                               HttpServletRequest request) {
         long current = ${tableName}QueryRequest.getCurrent();
         long size = ${tableName}QueryRequest.getPageSize();
         // 限制爬虫
@@ -177,22 +172,23 @@ public class ${caseTableName}Controller {
         Page<${caseTableName}> ${tableName}Page = ${tableName}Service.page(new Page<>(current, size),
                 ${tableName}Service.getQueryWrapper(${tableName}QueryRequest));
         // 获取封装类
-        return ResultUtils.success(${tableName}Service.get${caseTableName}VOPage(${tableName}Page));
+        return ResultUtils.success(${tableName}Service.get${caseTableName}VOPage(${tableName}Page, request));
     }
 
     /**
      * 分页获取当前登录用户创建的${classComment}列表
      *
-     * @param ${tableName}QueryRequest 分页获取${classComment}列表请求
-     * @return {@link BaseResponse }<{@link Page }<{@link ${caseTableName}VO }>>
+     * @param ${tableName}QueryRequest
+     * @param request
+     * @return
      */
     @PostMapping("/my/list/page/vo")
-    @Operation(summary = "分页获取当前登录用户创建的${classComment}列表")
-    public BaseResponse<Page<${caseTableName}VO>> listMy${caseTableName}VOByPage(@RequestBody ${caseTableName}QueryRequest ${tableName}QueryRequest) {
+    public BaseResponse<Page<${caseTableName}VO>> listMy${caseTableName}VOByPage(@RequestBody ${caseTableName}QueryRequest ${tableName}QueryRequest,
+                                                                 HttpServletRequest request) {
         ThrowUtils.throwIf(${tableName}QueryRequest == null, ErrorCode.PARAMS_ERROR);
         // 补充查询条件，只查询当前登录用户的数据
-        User loginUser = userService.getLoginUser();
-        ${tableName}QueryRequest.setId(loginUser.getId());
+        User loginUser = userService.getLoginUser(request);
+        ${tableName}QueryRequest.setUserId(loginUser.getId());
         long current = ${tableName}QueryRequest.getCurrent();
         long size = ${tableName}QueryRequest.getPageSize();
         // 限制爬虫
@@ -201,18 +197,18 @@ public class ${caseTableName}Controller {
         Page<${caseTableName}> ${tableName}Page = ${tableName}Service.page(new Page<>(current, size),
                 ${tableName}Service.getQueryWrapper(${tableName}QueryRequest));
         // 获取封装类
-        return ResultUtils.success(${tableName}Service.get${caseTableName}VOPage(${tableName}Page));
+        return ResultUtils.success(${tableName}Service.get${caseTableName}VOPage(${tableName}Page, request));
     }
 
     /**
      * 编辑${classComment}（给用户使用）
      *
-     * @param ${tableName}EditRequest 编辑${classComment}请求
-     * @return {@link BaseResponse }<{@link Boolean }>
+     * @param ${tableName}EditRequest
+     * @param request
+     * @return
      */
     @PostMapping("/edit")
-    @Operation(summary = "编辑${classComment}（给用户使用）")
-    public BaseResponse<Boolean> edit${caseTableName}(@RequestBody ${caseTableName}EditRequest ${tableName}EditRequest) {
+    public BaseResponse<Boolean> edit${caseTableName}(@RequestBody ${caseTableName}EditRequest ${tableName}EditRequest, HttpServletRequest request) {
         if (${tableName}EditRequest == null || ${tableName}EditRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -221,13 +217,13 @@ public class ${caseTableName}Controller {
         BeanUtils.copyProperties(${tableName}EditRequest, ${tableName});
         // 数据校验
         ${tableName}Service.valid${caseTableName}(${tableName}, false);
-        User loginUser = userService.getLoginUser();
+        User loginUser = userService.getLoginUser(request);
         // 判断是否存在
         long id = ${tableName}EditRequest.getId();
         ${caseTableName} old${caseTableName} = ${tableName}Service.getById(id);
         ThrowUtils.throwIf(old${caseTableName} == null, ErrorCode.NOT_FOUND_ERROR);
         // 仅本人或管理员可编辑
-        if (!old${caseTableName}.getId().equals(loginUser.getId()) && !userService.isAdmin(loginUser)) {
+        if (!old${caseTableName}.getUserId().equals(loginUser.getId()) && !userService.isAdmin(loginUser)) {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
         }
         // 操作数据库

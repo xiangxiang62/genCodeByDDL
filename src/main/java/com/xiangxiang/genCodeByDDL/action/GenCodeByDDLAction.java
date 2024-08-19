@@ -40,7 +40,6 @@ public class GenCodeByDDLAction extends AnAction {
             Messages.showMessageDialog("找不到项目。", "错误", Messages.getErrorIcon());
             return;
         }
-
         // 获取当前选中的文件
         VirtualFile file = event.getDataContext().getData(com.intellij.openapi.actionSystem.CommonDataKeys.VIRTUAL_FILE);
         if (file != null && "sql".equals(file.getExtension())) {
