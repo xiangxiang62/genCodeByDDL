@@ -9,6 +9,7 @@ import main.java.com.xiangxiang.genCodeByDDL.builder.dto.JavaUpdateRequestBuilde
 import main.java.com.xiangxiang.genCodeByDDL.builder.entity.JavaEntityCodeBuilder;
 import main.java.com.xiangxiang.genCodeByDDL.builder.mapper.JavaMapperBuilder;
 import main.java.com.xiangxiang.genCodeByDDL.builder.mapper.MapperXmlBuilder;
+import main.java.com.xiangxiang.genCodeByDDL.builder.pomDep.pomDepBuilder;
 import main.java.com.xiangxiang.genCodeByDDL.builder.readme.pluginsREADMEBuilder;
 import main.java.com.xiangxiang.genCodeByDDL.builder.service.JavaServiceBuilder;
 import main.java.com.xiangxiang.genCodeByDDL.builder.service.JavaServiceImplBuilder;
@@ -63,6 +64,8 @@ public class GeneratorFacade {
         List<String> javaCorsConfigCode = JavaConfigBuilder.buildJavaCorsConfigCode(tableSchemas,packageName);
 
         String pluginsREADME = pluginsREADMEBuilder.buildREADME();
+
+        String PomDep = pomDepBuilder.buildPomDep();
         // 生成控制层代码
         List<String> javaControllerCode = JavaControllerBuilder.buildJavaControllerCode(tableSchemas,packageName);
 
@@ -81,6 +84,7 @@ public class GeneratorFacade {
         generateBySQLVO.setJavaServiceCode(javaServiceCode);
         generateBySQLVO.setJavaServiceImplCode(javaServiceImplCode);
         generateBySQLVO.setJavaCorsConfigCode(javaCorsConfigCode);
+        generateBySQLVO.setPomDep(PomDep);
         // 封装返回
         return  generateBySQLVO;
     }

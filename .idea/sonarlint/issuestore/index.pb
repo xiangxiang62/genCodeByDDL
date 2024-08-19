@@ -5,8 +5,6 @@ Gsrc/main/java/com/xiangxiang/genCodeByDDL/builder/sql/MySQLDialect.java,9\c\9c
 Rsrc/main/java/com/xiangxiang/genCodeByDDL/model/dto/JavaCorsConfigGenerateDTO.java,c\f\cfdc9cd94c0caacfb995e894b9077665855c9fe0
 à
 Xsrc/main/java/com/xiangxiang/genCodeByDDL/model/dto/entity/JavaAddEntityGenerateDTO.java,d\3\d327589d22b96c40f4600ca3b9f6126c4d6d1d78
-t
-Dsrc/main/java/com/xiangxiang/genCodeByDDL/model/GenerateBySQLVO.java,8\6\8653d11c23e6f8f923ea9a54d5b734bb36d3671a
 Ä
 Psrc/main/java/com/xiangxiang/genCodeByDDL/builder/dto/JavaAddRequestBuilder.java,c\8\c86b3dda23687d45abf2a14bc91c2c08ce565dcd
 Å

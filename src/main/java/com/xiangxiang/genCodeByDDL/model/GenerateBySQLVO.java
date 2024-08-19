@@ -20,6 +20,11 @@ public class GenerateBySQLVO {
     private String README;
 
     /**
+     * 依赖
+     */
+    private String pomDep;
+
+    /**
      * 数据列表
      */
     private List<Map<String, Object>> dataList;

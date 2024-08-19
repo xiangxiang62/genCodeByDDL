@@ -95,6 +95,8 @@ public class GenCodeByDDLAction extends AnAction {
 
                     // 获取 README.md 文件
                     String README = generateBySQLVO.getREADME();
+                    // 获取 依赖 文件
+                    String pomDep = generateBySQLVO.getPomDep();
 
                     // 执行写操作的代码
                     WriteCommandAction.runWriteCommandAction(project, () -> {
@@ -157,6 +159,10 @@ public class GenCodeByDDLAction extends AnAction {
                             // 生成跨域配置
                             if (selectedOptions.getOrDefault("corsConfig", false)) {
                                 createCodeFiles(corsConfigCode, generatorDir, "config", null);
+                            }
+                            // 生成插件自述 pom 依赖文件
+                            if (selectedOptions.getOrDefault("pom", false)) {
+                                createPomDepFile(Collections.singletonList(pomDep), projectRoot);
                             }
 
                             // 在写操作完成后显示消息对话框
@@ -303,6 +309,7 @@ public class GenCodeByDDLAction extends AnAction {
 
     /**
      * 创建 readme 文件
+     *
      * @param javaCodeList 数据
      * @param generatorDir 生成目录
      * @throws IOException
@@ -315,6 +322,27 @@ public class GenCodeByDDLAction extends AnAction {
             String className = "README";
             // 创建文件
             VirtualFile newFile = readmeDir.createChildData(this, className + ".md");
+            newFile.setBinaryContent(javaCode.getBytes(StandardCharsets.UTF_8));
+        }
+    }
+
+    /**
+     * 创建 pom 依赖文件
+     *
+     * @param javaCodeList 数据
+     * @param generatorDir 生成目录
+     * @throws IOException
+     */
+    private void createPomDepFile(List<String> javaCodeList, VirtualFile generatorDir) throws IOException {
+        VirtualFile pomDep;
+        pomDep = getGeneratorDir(generatorDir, "generator");
+        pomDep = getGeneratorDir(pomDep, "pomDep");
+
+        // 将每个 DTO 代码写入对应的文件夹
+        for (String javaCode : javaCodeList) {
+            String className = "pomDep";
+            // 创建文件
+            VirtualFile newFile = pomDep.createChildData(this, className + ".xml");
             newFile.setBinaryContent(javaCode.getBytes(StandardCharsets.UTF_8));
         }
     }
@@ -370,6 +398,7 @@ public class GenCodeByDDLAction extends AnAction {
         private JCheckBox serviceImplCheckBox;
         private JCheckBox corsConfigCheckBox;
         private JTextField packageNameField;
+        private JCheckBox pomDepCheckBox;
         private final Map<String, Boolean> selectedOptions = new HashMap<>();
 
         protected CodeGenerationDialog(@Nullable Project project) {
@@ -434,7 +463,9 @@ public class GenCodeByDDLAction extends AnAction {
             configPanel.setPreferredSize(new Dimension(400, 250));
             mapperXmlCheckBox = new JCheckBox("Mapper.xml（MyBatisPlus-3）");
             corsConfigCheckBox = new JCheckBox("CorsConfig（跨域配置）");
+            pomDepCheckBox = new JCheckBox("Pom.xml（生成代码所需的 mvn 依赖）");
             configPanel.add(mapperXmlCheckBox);
+            configPanel.add(pomDepCheckBox);
             configPanel.add(corsConfigCheckBox);
 
             // 创建 "我全都要！！！" 按钮
@@ -450,6 +481,7 @@ public class GenCodeByDDLAction extends AnAction {
                 serviceCheckBox.setSelected(true);
                 serviceImplCheckBox.setSelected(true);
                 corsConfigCheckBox.setSelected(true);
+                pomDepCheckBox.setSelected(true);
             });
 
             // 创建一个面板来包含输入框、选项卡和按钮
@@ -497,6 +529,7 @@ public class GenCodeByDDLAction extends AnAction {
             selectedOptions.put("service", serviceCheckBox.isSelected());
             selectedOptions.put("serviceImpl", serviceImplCheckBox.isSelected());
             selectedOptions.put("corsConfig", corsConfigCheckBox.isSelected());
+            selectedOptions.put("pom", pomDepCheckBox.isSelected());
             super.doOKAction();
         }
 
