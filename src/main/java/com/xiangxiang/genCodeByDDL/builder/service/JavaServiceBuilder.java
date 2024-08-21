@@ -71,23 +71,13 @@ public class JavaServiceBuilder {
             String tableName = tableSchema.getTableName().toLowerCase();
             String upperCamelTableName = StringUtils.toPascalCase(tableSchema.getTableName());
 
-            // 依次填充每一列
-//            List<FieldTypeScriptDTO> fieldDTOList = new ArrayList<>();
-//            tableSchema.getFieldList().forEach(field -> {
-//                FieldTypeScriptDTO fieldDTO = new FieldTypeScriptDTO()
-//                        .setComment(Optional.ofNullable(field.getComment()).orElse(""))
-//                        .setTypescriptType(Optional.ofNullable(FieldTypeEnum.getEnumByValue(field.getFieldType())).orElse(FieldTypeEnum.TEXT).getTypescriptType())
-//                        .set(CharSequenceUtil.toCamelCase(field.getFieldName()));
-//                fieldDTOList.add(fieldDTO);
-//            });
-
             // 传递参数
             JavaServiceGenerateDTO generateDTO = new JavaServiceGenerateDTO()
                     .setPackageName(packageName)
-                    .setClassName(upperCamelTableName) // 类名为大写的表名
                     .setClassComment(Optional.ofNullable(tableComment).orElse(upperCamelTableName))
                     .setCaseTableName(upperCamelTableName)
                     .setTableName(StringUtils.toCamelCase(tableName));// 类注释为表注释或表名
+
             // 生成代码
             StringWriter stringWriter = new StringWriter();
             Template temp = configuration.getTemplate("TemplateService.java.ftl");

@@ -54,10 +54,9 @@ public class Knife4jConfigBuilder {
     /**
      * 构造 Knife4j 代码
      *
-     * @param tableSchemas 表概要
      * @return 生成的 java 代码
      */
-    public static String buildKnife4jConfig(List<TableSchema> tableSchemas, String packageName,String projectName) {
+    public static String buildKnife4jConfig(String packageName,String projectName) {
         // 填充模板
         Knife4jGenerateDTO jGenerateDTO = new Knife4jGenerateDTO()
                 .setProjectName(projectName)

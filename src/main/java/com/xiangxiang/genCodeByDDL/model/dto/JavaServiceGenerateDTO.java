@@ -15,11 +15,8 @@ import java.util.List;
 @Accessors(chain = true)
 public class JavaServiceGenerateDTO {
 
-    private String packageName = "xiangxiang";
-    /**
-     * 类名
-     */
-    private String className;
+    private String packageName;
+
 
     /**
      * 类注释
@@ -35,28 +32,5 @@ public class JavaServiceGenerateDTO {
      * 大写表名名
      */
     private String caseTableName;
-
-    /**
-     * 列信息列表
-     */
-    private List<FieldTypeScriptDTO> fieldList;
-
-    /**
-     * 列信息
-     */
-    @Data
-    @Accessors(chain = true)
-    public static class FieldTypeScriptDTO {
-
-        /**
-         * Typescript 类型
-         */
-        private String typescriptType;
-
-        /**
-         * 字段注释
-         */
-        private String comment;
-    }
 
 }

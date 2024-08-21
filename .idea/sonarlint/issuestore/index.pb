@@ -1,21 +1,9 @@
 
 w
 Gsrc/main/java/com/xiangxiang/genCodeByDDL/builder/sql/MySQLDialect.java,9\c\9cc63dc1728b9ca197a0e65151115c1f81312c74
-Ç
-Rsrc/main/java/com/xiangxiang/genCodeByDDL/model/dto/JavaCorsConfigGenerateDTO.java,c\f\cfdc9cd94c0caacfb995e894b9077665855c9fe0
-Ä
-Psrc/main/java/com/xiangxiang/genCodeByDDL/builder/dto/JavaAddRequestBuilder.java,c\8\c86b3dda23687d45abf2a14bc91c2c08ce565dcd
-Å
-Qsrc/main/java/com/xiangxiang/genCodeByDDL/builder/dto/JavaEditRequestBuilder.java,5\3\53a43386444793aaaebe69c7b4604dbb8ac541d7
-Ç
-Rsrc/main/java/com/xiangxiang/genCodeByDDL/builder/dto/JavaQueryRequestBuilder.java,0\2\020ceb3e94111e2aff0b000731f1aef7760ccad6
-É
-Ssrc/main/java/com/xiangxiang/genCodeByDDL/builder/dto/JavaUpdateRequestBuilder.java,7\f\7fd27fcb7b46b842f240b82894d8297ae567863b
-É
-Ssrc/main/java/com/xiangxiang/genCodeByDDL/builder/entity/JavaEntityCodeBuilder.java,5\1\516aee21abbecd4e5d001858c3ed2d5db4ff5e9d
-}
-Msrc/main/java/com/xiangxiang/genCodeByDDL/builder/vo/JavaEntityVOBuilder.java,8\2\821181679d4da0f84b1f7bb6394a8ac9609cffbe
-
-Osrc/main/java/com/xiangxiang/genCodeByDDL/builder/mapper/JavaMapperBuilder.java,e\3\e344134e17fd1de298e44446b2dea2723b7760db
-~
-Nsrc/main/java/com/xiangxiang/genCodeByDDL/builder/mapper/MapperXmlBuilder.java,2\6\261b8373283cf7f6bf9b7cca434ddce171654bf5
+9
+	README.md,8\e\8ec9a00bfd09b3190ac6b22251dbb1aa95a0579d
+o
+?src/main/java/com/xiangxiang/genCodeByDDL/common/ErrorCode.java,2\e\2e41358ebdb23fdbd527461cae101536d5b1f54b
+z
+Jsrc/main/java/com/xiangxiang/genCodeByDDL/exception/BusinessException.java,d\f\df28ec619854a1c04ea268c5190b872d89b2d2fc

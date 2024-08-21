@@ -63,19 +63,10 @@ public class JavaQueryRequestBuilder {
             // StringUtils.capitalize 将字符串的第一个字符转换为大写，其余字符保持不变
             String upperCamelTableName = StringUtils.capitalize(StringUtils.toCamelCase(tableName));
             String tableComment = Optional.ofNullable(tableSchema.getTableComment()).orElse(upperCamelTableName);
-            // 依次填充每一列
-            List<JavaEntityGenerateDTO.FieldDTO> fieldDTOList = new ArrayList<>();
-            tableSchema.getFieldList().forEach(field -> {
-                JavaEntityGenerateDTO.FieldDTO fieldDTO = new JavaEntityGenerateDTO.FieldDTO()
-                        .setComment(field.getComment())
-                        .setEntityType(field.getFieldType())
-                        .setFieldName(field.getFieldName());
-                fieldDTOList.add(fieldDTO);
-            });
+
             // 传递参数
             JavaQueryEntityGenerateDTO javaQueryEntityGenerateDTO = new JavaQueryEntityGenerateDTO()
                     .setPackageName(packageName)
-                    .setClassName(upperCamelTableName) // 类名为大写的表名
                     .setClassComment(Optional.ofNullable(tableComment).orElse(upperCamelTableName))
                     .setCaseTableName(upperCamelTableName)
                     .setTableName(tableName);// 类注释为表注释或表名

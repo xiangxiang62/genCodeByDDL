@@ -168,7 +168,7 @@ public class GenCodeByDDLAction extends AnAction {
                             if (selectedOptions.getOrDefault("pom", false)) {
                                 createPomDepFile(Collections.singletonList(pomDep), projectRoot);
                             }
-                            // 生成跨域配置
+                            // 生成接口文档配置
                             if (selectedOptions.getOrDefault("knife4j", false)) {
                                 createCodeFiles(Collections.singletonList(knife4jConfig), generatorDir, "config", null);
                             }
@@ -247,6 +247,7 @@ public class GenCodeByDDLAction extends AnAction {
 
         VirtualFile entityDir = subPackageDir;
 
+        // 创建下一层目录
         if ("dto".equals(generator) || "vo".equals(generator) || "entity".equals(generator) || "impl".equals(generator)) {
             entityDir = getGeneratorDir(subPackageDir, generator);
         }

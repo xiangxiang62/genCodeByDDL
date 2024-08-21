@@ -15,48 +15,6 @@ import java.util.List;
 @Accessors(chain = true)
 public class JavaCorsConfigGenerateDTO {
 
-    private String packageName = "xiangxiang";
-    /**
-     * 类名
-     */
-    private String className;
-
-    /**
-     * 类注释
-     */
-    private String classComment;
-
-    /**
-     * 表名名
-     */
-    private String tableName;
-
-    /**
-     * 大写表名名
-     */
-    private String caseTableName;
-
-    /**
-     * 列信息列表
-     */
-    private List<FieldTypeScriptDTO> fieldList;
-
-    /**
-     * 列信息
-     */
-    @Data
-    @Accessors(chain = true)
-    public static class FieldTypeScriptDTO {
-
-        /**
-         * Typescript 类型
-         */
-        private String typescriptType;
-
-        /**
-         * 字段注释
-         */
-        private String comment;
-    }
+    private String packageName;
 
 }

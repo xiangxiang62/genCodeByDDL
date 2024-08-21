@@ -15,11 +15,9 @@ import java.util.List;
 @Data
 @Accessors(chain = true)
 public class JavaAddEntityGenerateDTO {
-    private String packageName = "xiangxiang";
-    /**
-     * 类名
-     */
-    private String className;
+
+
+    private String packageName;
 
     /**
      * 类注释
@@ -27,37 +25,13 @@ public class JavaAddEntityGenerateDTO {
     private String classComment;
 
     /**
-     * 表名名
+     * 表名
      */
     private String tableName;
 
     /**
-     * 大写表名名
+     * 大写表名
      */
     private String caseTableName;
-
-    /**
-     * 列信息列表
-     */
-    private List<JavaControllerGenerateDTO.FieldTypeScriptDTO> fieldList;
-
-    /**
-     * 列信息
-     */
-    @Data
-    @Accessors(chain = true)
-    public static class FieldTypeScriptDTO {
-
-        /**
-         * Typescript 类型
-         */
-        private String typescriptType;
-
-        /**
-         * 字段注释
-         */
-        private String comment;
-    }
-
 
 }

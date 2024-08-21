@@ -17,19 +17,14 @@ public class MapperXmlGenerateDTO {
 
 
     /**
-     * 类名
+     * 包名
      */
-    private String packageName = "xiangxiang";
+    private String packageName;
 
     /**
      * 大写表名名
      */
     private String caseTableName;
-
-    /**
-     * 类注释
-     */
-    private String classComment;
 
     /**
      * 列信息列表
@@ -51,11 +46,6 @@ public class MapperXmlGenerateDTO {
          * Java 类型
          */
         private String jdbcType;
-
-        /**
-         * 注释（字段中文名）
-         */
-        private String comment;
 
         /**
          * 是否主键

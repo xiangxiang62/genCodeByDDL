@@ -232,9 +232,6 @@ public class TableSchemaBuilder {
         }
         field.setOnUpdate(onUpdate);
 
-        // 设置字段的 Mock 类型（默认为 NONE）
-//        field.setMockType(MockTypeEnum.NONE.getValue());
-
         // 将字段添加到字段列表中
         fieldList.add(field);
     }

@@ -70,20 +70,9 @@ public class JavaControllerBuilder {
             String tableName = tableSchema.getTableName().toLowerCase();
             String upperCamelTableName = StringUtils.toPascalCase(tableSchema.getTableName());
 
-            // 依次填充每一列
-//            List<FieldTypeScriptDTO> fieldDTOList = new ArrayList<>();
-//            tableSchema.getFieldList().forEach(field -> {
-//                FieldTypeScriptDTO fieldDTO = new FieldTypeScriptDTO()
-//                        .setComment(Optional.ofNullable(field.getComment()).orElse(""))
-//                        .setTypescriptType(Optional.ofNullable(FieldTypeEnum.getEnumByValue(field.getFieldType())).orElse(FieldTypeEnum.TEXT).getTypescriptType())
-//                        .set(CharSequenceUtil.toCamelCase(field.getFieldName()));
-//                fieldDTOList.add(fieldDTO);
-//            });
-
             // 传递参数
             JavaControllerGenerateDTO generateDTO = new JavaControllerGenerateDTO()
                     .setPackageName(packageName)
-                    .setClassName(upperCamelTableName) // 类名为大写的表名
                     .setClassComment(Optional.ofNullable(tableComment).orElse(upperCamelTableName))
                     .setCaseTableName(upperCamelTableName)
                     .setTableName(StringUtils.toCamelCase(tableName));// 类注释为表注释或表名

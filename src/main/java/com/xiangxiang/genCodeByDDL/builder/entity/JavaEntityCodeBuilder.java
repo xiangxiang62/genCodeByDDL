@@ -63,7 +63,7 @@ public class JavaEntityCodeBuilder {
             // StringUtils.capitalize 将字符串的第一个字符转换为大写，其余字符保持不变
             String upperCamelTableName = StringUtils.capitalize(StringUtils.toCamelCase(tableName));
             String tableComment = Optional.ofNullable(tableSchema.getTableComment()).orElse(upperCamelTableName);
-// 依次填充每一列
+            // 依次填充每一列
             List<JavaEntityGenerateDTO.FieldDTO> fieldDTOList = new ArrayList<>();
             tableSchema.getFieldList().forEach(field -> {
                 String sqlType = field.getFieldType();

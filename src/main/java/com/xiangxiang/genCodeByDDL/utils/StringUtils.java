@@ -2,23 +2,6 @@ package main.java.com.xiangxiang.genCodeByDDL.utils;
 
 public class StringUtils {
 
-//    public static String toCamelCase(String input) {
-//        StringBuilder result = new StringBuilder();
-//        boolean capitalizeNext = false;
-//
-//        for (char c : input.toCharArray()) {
-//            if (c == '_') {
-//                capitalizeNext = true;
-//            } else if (capitalizeNext) {
-//                result.append(Character.toUpperCase(c));
-//                capitalizeNext = false;
-//            } else {
-//                result.append(Character.toLowerCase(c));
-//            }
-//        }
-//
-//        return result.toString();
-//    }
 
     public static String capitalize(String input) {
         if (input == null || input.isEmpty()) {

@@ -84,7 +84,6 @@ public class MapperXmlBuilder {
 
                 // todo
                 MapperXmlGenerateDTO.FieldDTO fieldDTO = new MapperXmlGenerateDTO.FieldDTO()
-                        .setComment(field.getComment())
                         .setJdbcType(Type)
                         .setIsPrimaryKey(isPrimaryKey)
                         .setFieldName(field.getFieldName());
@@ -96,7 +95,6 @@ public class MapperXmlBuilder {
             MapperXmlGenerateDTO mapperXmlGenerateDTO = new MapperXmlGenerateDTO()
                     .setPackageName(packageName)
                     .setCaseTableName(upperCamelTableName)
-                    .setClassComment(tableComment)
                     .setFieldList(fieldDTOList);
 
             StringWriter stringWriter = new StringWriter();

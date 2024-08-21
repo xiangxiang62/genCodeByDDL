@@ -64,37 +64,14 @@ public class JavaConfigBuilder {
      * @return 生成的代码
      */
     @SneakyThrows
-    public static List<String> buildJavaCorsConfigCode(List<TableSchema> tableSchemas,String packageName) {
-        List<String> crud = new ArrayList<>();
-        for (TableSchema tableSchema : tableSchemas) {
-            String tableComment = tableSchema.getTableComment();
-            String tableName = tableSchema.getTableName().toLowerCase();
-            String upperCamelTableName = StringUtils.toPascalCase(tableSchema.getTableName());
-
-            // 依次填充每一列
-//            List<FieldTypeScriptDTO> fieldDTOList = new ArrayList<>();
-//            tableSchema.getFieldList().forEach(field -> {
-//                FieldTypeScriptDTO fieldDTO = new FieldTypeScriptDTO()
-//                        .setComment(Optional.ofNullable(field.getComment()).orElse(""))
-//                        .setTypescriptType(Optional.ofNullable(FieldTypeEnum.getEnumByValue(field.getFieldType())).orElse(FieldTypeEnum.TEXT).getTypescriptType())
-//                        .set(CharSequenceUtil.toCamelCase(field.getFieldName()));
-//                fieldDTOList.add(fieldDTO);
-//            });
-
-            // 传递参数
-            JavaCorsConfigGenerateDTO generateDTO = new JavaCorsConfigGenerateDTO()
-                    .setPackageName(packageName)
-                    .setClassName(upperCamelTableName) // 类名为大写的表名
-                    .setClassComment(Optional.ofNullable(tableComment).orElse(upperCamelTableName))
-                    .setCaseTableName(upperCamelTableName)
-                    .setTableName(StringUtils.toCamelCase(tableName));// 类注释为表注释或表名
-            // 生成代码
-            StringWriter stringWriter = new StringWriter();
-            Template temp = configuration.getTemplate("CorsConfig.java.ftl");
-            temp.process(generateDTO, stringWriter);
-            crud.add(stringWriter.toString());
-            break;
-        }
-        return crud;
+    public static String buildJavaCorsConfigCode(String packageName) {
+        // 传递参数
+        JavaCorsConfigGenerateDTO generateDTO = new JavaCorsConfigGenerateDTO()
+                .setPackageName(packageName);
+        // 生成代码
+        StringWriter stringWriter = new StringWriter();
+        Template temp = configuration.getTemplate("CorsConfig.java.ftl");
+        temp.process(generateDTO, stringWriter);
+        return stringWriter.toString();
     }
 }
