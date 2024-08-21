@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://pan.imgbed.link/file/104161" alt="DDL to Java Code Generator Plugin" />
+  <img src="https://pan.imgbed.link/file/106516" alt="DDL to Java Code Generator Plugin" />
 </div>
 
 # DDL to Java Code Generator Plugin
