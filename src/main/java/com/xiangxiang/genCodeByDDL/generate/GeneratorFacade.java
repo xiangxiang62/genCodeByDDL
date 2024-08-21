@@ -9,6 +9,7 @@ import main.java.com.xiangxiang.genCodeByDDL.builder.dto.JavaQueryRequestBuilder
 import main.java.com.xiangxiang.genCodeByDDL.builder.dto.JavaUpdateRequestBuilder;
 import main.java.com.xiangxiang.genCodeByDDL.builder.entity.JavaEntityCodeBuilder;
 import main.java.com.xiangxiang.genCodeByDDL.builder.exception.JavaBusinessExceptionBuilder;
+import main.java.com.xiangxiang.genCodeByDDL.builder.exception.JavaErrorBuilder;
 import main.java.com.xiangxiang.genCodeByDDL.builder.exception.JavaThrowIfBuilder;
 import main.java.com.xiangxiang.genCodeByDDL.builder.mapper.JavaMapperBuilder;
 import main.java.com.xiangxiang.genCodeByDDL.builder.mapper.MapperXmlBuilder;
@@ -69,6 +70,8 @@ public class GeneratorFacade {
 
         String throwUtilsCode = JavaThrowIfBuilder.buildJavaThrowUtilsCode(packageName);
 
+        String errorCode = JavaErrorBuilder.buildJavaErrorCodeCode(packageName);
+
         System.out.println("建数据结束");
         GenerateBySQLVO generateBySQLVO = new GenerateBySQLVO();
         generateBySQLVO.setJavaEntityCode(javaEntityCode);
@@ -88,6 +91,7 @@ public class GeneratorFacade {
         generateBySQLVO.setKnife4jConfig(knife4jConfig);
         generateBySQLVO.setBusinessExceptionCode(businessExceptionCode);
         generateBySQLVO.setThrowIfCode(throwUtilsCode);
+        generateBySQLVO.setErrorCode(errorCode);
         // 封装返回
         return  generateBySQLVO;
     }

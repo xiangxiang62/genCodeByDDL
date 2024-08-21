@@ -30,6 +30,12 @@ public class GenerateBySQLVO {
     private String pomDep;
 
     /**
+     * errorCode
+     */
+    private String errorCode;
+
+
+    /**
      * Exception
      */
     private String businessExceptionCode;

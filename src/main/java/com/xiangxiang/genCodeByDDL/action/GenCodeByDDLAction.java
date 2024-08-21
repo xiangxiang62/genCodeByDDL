@@ -107,6 +107,8 @@ public class GenCodeByDDLAction extends AnAction {
 
                     String throwIfCode = generateBySQLVO.getThrowIfCode();
 
+                    String errorCode = generateBySQLVO.getErrorCode();
+
                     // 执行写操作的代码
                     WriteCommandAction.runWriteCommandAction(project, () -> {
                         try {
@@ -185,6 +187,10 @@ public class GenCodeByDDLAction extends AnAction {
                             // 生成throw
                             if (selectedOptions.getOrDefault("throwIf", false)) {
                                 createCodeFiles(Collections.singletonList(throwIfCode), generatorDir, "exception", null);
+                            }
+                            // 生成errorCode
+                            if (selectedOptions.getOrDefault("errorCode", false)) {
+                                createCodeFiles(Collections.singletonList(errorCode), generatorDir, "exception", null);
                             }
                             // 在写操作完成后显示消息对话框
                             ApplicationManager.getApplication().invokeLater(() -> {
@@ -378,7 +384,7 @@ public class GenCodeByDDLAction extends AnAction {
     private String extractClassName(String javaCode) {
         String[] lines = javaCode.split("\\n");
         for (String line : lines) {
-            if (line.startsWith("public class") || line.startsWith("public interface")) {
+            if (line.startsWith("public class") || line.startsWith("public interface") || line.startsWith("public enum")) {
                 String[] parts = line.split("\\s+");
                 if (parts.length > 2) {
                     return parts[2];
@@ -424,6 +430,7 @@ public class GenCodeByDDLAction extends AnAction {
         private JCheckBox knife4jConfigCheckBox;
         private JCheckBox businessExceptionCodeCheckBox;
         private JCheckBox throwIfCheckBox;
+        private JCheckBox errorCodeCheckBox;
         private final Map<String, Boolean> selectedOptions = new HashMap<>();
 
         protected CodeGenerationDialog(@Nullable Project project) {
@@ -490,14 +497,16 @@ public class GenCodeByDDLAction extends AnAction {
             corsConfigCheckBox = new JCheckBox("CorsConfig（跨域配置）");
             pomDepCheckBox = new JCheckBox("Pom.xml（生成代码所需的 mvn 依赖）");
             knife4jConfigCheckBox = new JCheckBox("knife4jConfig（接口文档）");
-            businessExceptionCodeCheckBox = new JCheckBox("全局异常");
-            throwIfCheckBox = new JCheckBox("异常工具类");
+            businessExceptionCodeCheckBox = new JCheckBox("BusException全局异常");
+            throwIfCheckBox = new JCheckBox("ThrowIf 异常工具类");
+            errorCodeCheckBox = new JCheckBox("ErrorCode 枚举");
             configPanel.add(mapperXmlCheckBox);
             configPanel.add(pomDepCheckBox);
             configPanel.add(corsConfigCheckBox);
             configPanel.add(knife4jConfigCheckBox);
             configPanel.add(businessExceptionCodeCheckBox);
             configPanel.add(throwIfCheckBox);
+            configPanel.add(errorCodeCheckBox);
 
             // 创建 "我全都要！！！" 按钮
             JButton selectAllButton = new JButton("我全都要！！！");
@@ -516,6 +525,7 @@ public class GenCodeByDDLAction extends AnAction {
                 knife4jConfigCheckBox.setSelected(true);
                 businessExceptionCodeCheckBox.setSelected(true);
                 throwIfCheckBox.setSelected(true);
+                errorCodeCheckBox.setSelected(true);
             });
 
             // 创建一个面板来包含输入框、选项卡和按钮
@@ -567,6 +577,7 @@ public class GenCodeByDDLAction extends AnAction {
             selectedOptions.put("knife4j", knife4jConfigCheckBox.isSelected());
             selectedOptions.put("businessExceptionCode", businessExceptionCodeCheckBox.isSelected());
             selectedOptions.put("throwIf", throwIfCheckBox.isSelected());
+            selectedOptions.put("errorCode", errorCodeCheckBox.isSelected());
             super.doOKAction();
         }
 
