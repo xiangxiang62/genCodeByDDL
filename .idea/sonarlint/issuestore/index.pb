@@ -1,8 +1,6 @@
 
 w
 Gsrc/main/java/com/xiangxiang/genCodeByDDL/builder/sql/MySQLDialect.java,9\c\9cc63dc1728b9ca197a0e65151115c1f81312c74
-9
-	README.md,8\e\8ec9a00bfd09b3190ac6b22251dbb1aa95a0579d
 o
 ?src/main/java/com/xiangxiang/genCodeByDDL/common/ErrorCode.java,2\e\2e41358ebdb23fdbd527461cae101536d5b1f54b
 z
