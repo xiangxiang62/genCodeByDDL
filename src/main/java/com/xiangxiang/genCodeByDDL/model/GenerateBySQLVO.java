@@ -35,6 +35,11 @@ public class GenerateBySQLVO {
     private String businessExceptionCode;
 
     /**
+     * throwIf
+     */
+    private String throwIfCode;
+
+    /**
      * Java 实体代码
      */
     private List<String> javaEntityCode;
