@@ -8,6 +8,7 @@ import main.java.com.xiangxiang.genCodeByDDL.builder.dto.JavaEditRequestBuilder;
 import main.java.com.xiangxiang.genCodeByDDL.builder.dto.JavaQueryRequestBuilder;
 import main.java.com.xiangxiang.genCodeByDDL.builder.dto.JavaUpdateRequestBuilder;
 import main.java.com.xiangxiang.genCodeByDDL.builder.entity.JavaEntityCodeBuilder;
+import main.java.com.xiangxiang.genCodeByDDL.builder.exception.JavaBusinessExceptionBuilder;
 import main.java.com.xiangxiang.genCodeByDDL.builder.mapper.JavaMapperBuilder;
 import main.java.com.xiangxiang.genCodeByDDL.builder.mapper.MapperXmlBuilder;
 import main.java.com.xiangxiang.genCodeByDDL.builder.pomDep.pomDepBuilder;
@@ -63,6 +64,8 @@ public class GeneratorFacade {
 
         String knife4jConfig = Knife4jConfigBuilder.buildKnife4jConfig(packageName, projectName);
 
+        String businessExceptionCode = JavaBusinessExceptionBuilder.buildJavaBusinessExceptionCode(packageName);
+
         System.out.println("建数据结束");
         GenerateBySQLVO generateBySQLVO = new GenerateBySQLVO();
         generateBySQLVO.setJavaEntityCode(javaEntityCode);
@@ -80,6 +83,7 @@ public class GeneratorFacade {
         generateBySQLVO.setJavaCorsConfigCode(Collections.singletonList(javaCorsConfigCode));
         generateBySQLVO.setPomDep(PomDep);
         generateBySQLVO.setKnife4jConfig(knife4jConfig);
+        generateBySQLVO.setBusinessExceptionCode(businessExceptionCode);
         // 封装返回
         return  generateBySQLVO;
     }

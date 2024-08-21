@@ -102,6 +102,9 @@ public class GenCodeByDDLAction extends AnAction {
                     // 获取 Knife4J
                     String knife4jConfig = generateBySQLVO.getKnife4jConfig();
 
+                    // 获取 businessExceptionCode
+                    String businessExceptionCode = generateBySQLVO.getBusinessExceptionCode();
+
                     // 执行写操作的代码
                     WriteCommandAction.runWriteCommandAction(project, () -> {
                         try {
@@ -172,6 +175,11 @@ public class GenCodeByDDLAction extends AnAction {
                             if (selectedOptions.getOrDefault("knife4j", false)) {
                                 createCodeFiles(Collections.singletonList(knife4jConfig), generatorDir, "config", null);
                             }
+                            // 生成跨域配置
+                            if (selectedOptions.getOrDefault("businessExceptionCode", false)) {
+                                createCodeFiles(Collections.singletonList(businessExceptionCode), generatorDir, "exception", null);
+                            }
+
                             // 在写操作完成后显示消息对话框
                             ApplicationManager.getApplication().invokeLater(() -> {
                                 Messages.showMessageDialog("代码已生成并保存，生成位置：./generator。", "成功", Messages.getInformationIcon());
@@ -408,6 +416,7 @@ public class GenCodeByDDLAction extends AnAction {
         private JTextField packageNameField;
         private JCheckBox pomDepCheckBox;
         private JCheckBox knife4jConfigCheckBox;
+        private JCheckBox businessExceptionCodeCheckBox;
         private final Map<String, Boolean> selectedOptions = new HashMap<>();
 
         protected CodeGenerationDialog(@Nullable Project project) {
@@ -474,10 +483,12 @@ public class GenCodeByDDLAction extends AnAction {
             corsConfigCheckBox = new JCheckBox("CorsConfig（跨域配置）");
             pomDepCheckBox = new JCheckBox("Pom.xml（生成代码所需的 mvn 依赖）");
             knife4jConfigCheckBox = new JCheckBox("knife4jConfig（接口文档）");
+            businessExceptionCodeCheckBox = new JCheckBox("全局异常");
             configPanel.add(mapperXmlCheckBox);
             configPanel.add(pomDepCheckBox);
             configPanel.add(corsConfigCheckBox);
             configPanel.add(knife4jConfigCheckBox);
+            configPanel.add(businessExceptionCodeCheckBox);
 
             // 创建 "我全都要！！！" 按钮
             JButton selectAllButton = new JButton("我全都要！！！");
@@ -494,6 +505,7 @@ public class GenCodeByDDLAction extends AnAction {
                 corsConfigCheckBox.setSelected(true);
                 pomDepCheckBox.setSelected(true);
                 knife4jConfigCheckBox.setSelected(true);
+                businessExceptionCodeCheckBox.setSelected(true);
             });
 
             // 创建一个面板来包含输入框、选项卡和按钮
@@ -543,6 +555,7 @@ public class GenCodeByDDLAction extends AnAction {
             selectedOptions.put("corsConfig", corsConfigCheckBox.isSelected());
             selectedOptions.put("pom", pomDepCheckBox.isSelected());
             selectedOptions.put("knife4j", knife4jConfigCheckBox.isSelected());
+            selectedOptions.put("businessExceptionCode", businessExceptionCodeCheckBox.isSelected());
             super.doOKAction();
         }
 
