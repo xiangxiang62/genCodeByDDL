@@ -1,56 +1,86 @@
-<div align="center">
-  <img src="https://pan.imgbed.link/file/106516" alt="DDL to Java Code Generator Plugin" />
-</div>
-
 # DDL to Java Code Generator Plugin
 
-> DDL 转 Java 代码生成器插件
->
-> 作者: 香香
+<div align="center">
+  <img src="https://pan.imgbed.link/file/106516" alt="DDL to Java Code Generator Plugin" />
+  <p>
+    <img src="https://img.shields.io/badge/IntelliJ%20IDEA-2021.3+-blue.svg" alt="Support IDEA">
+    <img src="https://img.shields.io/badge/JDK-1.8%20%2F%2011%20%2F%2017-orange.svg" alt="Support JDK">
+    <img src="https://img.shields.io/badge/MyBatis--Plus-Latest-green.svg" alt="Support MP">
+  </p>
+  <p>🚀 <b>拒绝重复劳动：从 DDL 到全套后端架构，只需一键。</b></p>
+</div>
 
-## 介绍
+---
 
+## 📖 项目介绍
 
+**DDL to Java Code Generator** 是一款为 Java 开发者量身定制的 IntelliJ IDEA 插件。它通过深度解析 SQL DDL 语句，自动化生成符合工业标准的后端代码。
 
-这个 IntelliJ IDEA 插件可以从 SQL 文件自动生成 Java 代码。支持生成 Java 实体类（Entity Classes）、控制器类（Controller Classes）和数据传输对象（DTOs）等常规代码。插件简化了从数据库表结构到 Java 代码的转换过程，使开发者能够快速创建符合项目需求的代码文件。
+**为什么选择它？**
+在传统的开发流程中，根据数据库表创建 Entity、Mapper、Service 和 Controller 需要耗费大量时间且容易出错。本插件将这一过程缩短至秒级，确保代码风格统一，极大提升了开发效率。
 
+## ✨ 核心特性
 
-## 使用方法
+- **🚀 全链路生成**：覆盖从 `Controller`、`Service`、`Mapper` 到 `Entity`、`DTO`、`VO` 的完整开发闭环。
+- **🔌 MyBatis-Plus 原生适配**：自动集成 MP 特性，生成包含 `BaseMapper` 和 `IService` 的标准架构。
+- **📂 智能包结构管理**：根据表名自动创建子包（如 `dto/user`），彻底告别手动创建文件夹的烦恼。
+- **🛠️ 基础设施一键配置**：内置常用的跨域配置（CorsConfig）与 `pom.xml` 核心依赖模板。
+- **⚡ 零配置成本**：无需 YAML 或 JSON 配置，直接解析 SQL 注释作为 Java 字段注释，实现所见即所得。
 
-1. **打开 SQL 文件**：
-   在 IntelliJ IDEA 中打开您想要生成代码的 `.sql` 文件。
+## 🛠️ 生成项说明
 
-2. **执行插件**：
-    - 点击菜单栏中的插件按钮或从工具栏中找到插件图标以启动代码生成。
+| 组件层级 | 生成内容 | 核心技术点 |
+| :--- | :--- | :--- |
+| **Controller** | 基础 CRUD 接口 | RESTful 风格，预留业务入口 |
+| **Service** | 接口及实现类 (Impl) | 继承 MyBatis-Plus 的 `IService` |
+| **Mapper** | Mapper 接口与 XML | 自动映射 `ResultMap` 与字段 |
+| **Model/Entity** | 数据库实体类 | 自动转换下划线命名为驼峰命名 |
+| **DTO/VO** | 数据传输与展示对象 | 自动按表名进行分包归类 |
+| **Configuration** | 跨域与项目配置 | 解决前后端联调痛点 |
 
-3. **选择生成的代码类型**：
-    - 插件会弹出一个对话框，允许您选择生成的代码类型：
-        - **Controller**：生成控制器类代码。
-        - **Model**：生成与数据库表对应的实体类。
-        - **DTO**：生成数据传输对象（DTO）类，并按表名分类存放。
-        - **VO**：生成数据视图对象，并按照表名进行分类。
-        - **Mapper**：生成持久层类代码（基于 MyBatisPlus）。
-        - **Mapper.xml**：生成持久层类代码（基于 MyBatisPlus）。
-        - **Service**：生成逻辑层以及实现类类代码。
-        - **跨域配置**：配置跨域请求，允许指定来源进行跨域访问。
-        - **pom.xml文件**：Maven 构建配置文件，定义项目依赖和插件。
-          ...
+## 🚀 快速开始
 
-4. **生成代码**：
-    - 根据您的选择，插件将自动生成所选类型的代码并将其保存到项目的 `generator` 目录下。
+1. **选择 SQL 文件**：在 IDEA 中打开 `.sql` 文件。
+2. **触发生成**：在编辑器上方工具栏找到插件按钮，或使用快捷键启动。
+3. **选择模板**：在 UI 界面勾选所需的代码模块。
+4. **即刻可用**：插件将在项目根目录下的 `generator` 文件夹中输出代码，直接拖入项目即可使用。
 
-## UI
+## 📂 生成目录示例
+
+```text
+generator/
+├── controller/        # 表现层
+├── service/           # 业务接口层
+│   └── impl/          # 业务实现层
+├── mapper/            # 持久层接口
+├── entity/            # 数据库实体
+├── dto/               # 数据传输对象（按表名分包）
+│   └── user/
+├── vo/                # 视图对象
+└── config/            # 跨域等基础配置
+````
+
+## 🖼️ UI 预览
 
 <div align="center">
   <img src="https://pan.imgbed.link/file/104699" alt="功能示例" />
 </div>
 
+## 📅 迭代计划 (Roadmap)
 
-## 后续将迭代支持
+  - [ ] **Common Result**：自动生成统一返回体 `Result<T>`。
+  - [ ] **Smart Enum**：解析 SQL `COMMENT` 中的状态值自动生成 Java 枚举。
+  - [ ] **Global Exception**：一键植入全局异常处理逻辑。
+  - [ ] **Validator**：根据 SQL 字段约束（如 NOT NULL）自动生成 Bean Validation 注解。
+  - [ ] **Utils**：集成高频使用的工具类（JWT、Redis、Date）。
 
-- **常用枚举**：定义系统中常用的枚举类型，例如状态码或角色类型。
-- **全局异常类**：处理全局异常，并返回统一格式的错误信息。
-- **通用工具类**：提供通用的工具方法，例如字符串处理、日期转换等。
-- ...
+## 🤝 贡献与反馈
 
+如果您有任何想法或建议，欢迎通过以下方式联系：
 
+  - **作者**：香香
+  - **项目反馈**：[提交 Issue](https://github.com/xiangxiang62/genCodeByDDL/issues)
+
+-----
+
+如果这个插件帮到了你，请给一个 Star ⭐
